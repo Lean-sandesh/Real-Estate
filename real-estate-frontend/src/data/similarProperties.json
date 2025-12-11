@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2,
+    "title": "Modern 2BHK Flat in Andheri",
+    "price": "₹1.2 Cr",
+    "location": "Andheri East, Mumbai",
+    "type": "Apartment",
+    "area": "1100 sqft",
+    "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    "rating": 4.6,
+    "beds": 2,
+    "baths": 2
+  },
+  {
+    "id": 3,
+    "title": "Luxury 3BHK in Lokhandwala",
+    "price": "₹2.1 Cr",
+    "location": "Lokhandwala, Mumbai",
+    "type": "Apartment",
+    "area": "1800 sqft",
+    "image": "https://images.unsplash.com/photo-1616486338815-3e98d3f7d0b4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    "rating": 4.8,
+    "beds": 3,
+    "baths": 3
+  },
+  {
+    "id": 4,
+    "title": "Premium 4BHK Villa",
+    "price": "₹4.5 Cr",
+    "location": "Juhu, Mumbai",
+    "type": "Villa",
+    "area": "3200 sqft",
+    "image": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
+    "rating": 4.9,
+    "beds": 4,
+    "baths": 4
+  }
+]
