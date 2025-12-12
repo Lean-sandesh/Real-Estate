@@ -1,12 +1,20 @@
 import { FiHeart } from "react-icons/fi";
 import { useFavorites } from "../context/FavoritesContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Favorites() {
   const { favorites, removeFavorite } = useFavorites();
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-md"
+      >
+        <span className="text-lg">←</span>
+        <span>Back</span>
+      </button>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
         <FiHeart className="text-red-500" /> Favorites
       </h1>

@@ -113,15 +113,14 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   return (
     <nav
-      className={`w-full transition-all duration-300 ${
-        isScrolled
+      className={`w-full transition-all duration-300 ${isScrolled
           ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md"
           : "bg-white dark:bg-gray-900"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          
+
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src="" alt="Logo" className="h-8 w-auto" />
@@ -136,11 +135,10 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
-                  location.pathname === item.path
+                className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${location.pathname === item.path
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
                     : "text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
+                  }`}
               >
                 {item.icon}
                 {item.name}
@@ -150,7 +148,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
           {/* Right side (Desktop) */}
           <div className="hidden md:flex items-center space-x-4">
-            
+
             {user ? (
               <Link
                 to="/submit-property"
@@ -218,9 +216,9 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     </Link>
                     <button
                       onClick={logout}
-                      className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full flex items-center px-4 py-2 text-sm font-medium rounded-md bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-md"
                     >
-                      <FiLogOut className="mr-2" /> Logout
+                      <FiLogOut className="mr-2 text-lg" /> Logout
                     </button>
                   </div>
                 )}

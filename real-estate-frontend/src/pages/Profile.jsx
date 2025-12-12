@@ -84,9 +84,10 @@ export default function Profile() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4"
+        className="flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-md"
       >
-        ← Back
+        <span className="text-lg">←</span>
+        <span>Back</span>
       </button>
 
       <h1 className="text-3xl font-bold mb-6">My Profile</h1>
