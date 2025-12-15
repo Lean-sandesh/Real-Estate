@@ -66,9 +66,9 @@ function App() {
             element={<AppContent darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
           />
 
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/listings" element={<Listings />} />
           {/* ---------------- Admin Routes ---------------- */}
           <Route

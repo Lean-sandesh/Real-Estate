@@ -2,16 +2,19 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import api from '../lib/axios';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
+
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null); // { id, name, email, role }
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const updateUser = (updatedUser) => {
-  setCurrentUser(updatedUser);
-  localStorage.setItem("user", JSON.stringify(updatedUser));
+    setCurrentUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   // Persist token in localStorage only (per backend requirement)
@@ -130,8 +133,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setCurrentUser(null);
-    toast.success('Logged out');
+    localStorage.removeItem("user");
+
+    toast.success("Logged out");
+    navigate("/", { replace: true });
   };
+
 
   const isAuthenticated = () => !!currentUser;
   const isAdmin = () => currentUser?.role === 'admin';

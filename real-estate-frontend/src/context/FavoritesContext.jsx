@@ -1,17 +1,32 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
+
 
 const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
+  const { user } = useAuth();
+
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem("favorites");
     return stored ? JSON.parse(stored) : [];
   });
 
+  // CLEAR favorites when user logs out
+  useEffect(() => {
+    if (!user) {
+      setFavorites([]);
+      localStorage.removeItem("favorites");
+    }
+  }, [user]);
+
   // Save to localStorage
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+    if (user) {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+  }, [favorites, user]);
+
 
   const addFavorite = (property) => {
     setFavorites((prev) => {

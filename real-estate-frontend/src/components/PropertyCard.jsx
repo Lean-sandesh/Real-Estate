@@ -7,12 +7,16 @@ import { motion } from 'framer-motion';
 import { FiMapPin } from "react-icons/fi";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useFavorites } from "../context/FavoritesContext";
+import { useAuth } from "../context/AuthContext";
+
 
 
 
 export default function PropertyCard({ property }) {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const [current, setCurrent] = useState(0);
+  const { user } = useAuth();
+
 
 
 
@@ -142,16 +146,19 @@ export default function PropertyCard({ property }) {
               {property.title}
             </Link>
           </h2>
-          <button
-            onClick={toggleFavorite}
-            className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 p-1"
-          >
-            {isFavorite(property.id) ? (
-              <FaHeart className="text-red-500 text-xl" />
-            ) : (
-              <FaRegBookmark className="text-xl" />
-            )}
-          </button>
+          {user && (
+            <button
+              onClick={toggleFavorite}
+              className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 p-1"
+            >
+              {isFavorite(property.id) ? (
+                <FaHeart className="text-red-500 text-xl" />
+              ) : (
+                <FaRegBookmark className="text-xl" />
+              )}
+            </button>
+          )}
+
 
         </div>
 
