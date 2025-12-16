@@ -178,53 +178,54 @@ export default function Home() {
     <div className="bg-gray-50 min-h-screen">
       {/* ===== PREMIUM HERO SECTION (ENHANCED) ===== */}
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden text-white pt-24 pb-16">
-        {/* Animated Background with Gradient Overlay */}
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={currentSlide}
-            className="absolute inset-0 w-full h-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
-          >
-            <img
-              src={heroSlides[currentSlide].image}
-              alt={heroSlides[currentSlide].title}
-              className="absolute inset-0 w-full h-full object-cover object-center"
-              loading="eager"
-            />
-            {/* Deeper, premium overlay */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/50 to-black/80" />
-          </motion.div>
-        </AnimatePresence>
+         {/* Animated Background with Gradient Overlay */}
+  <AnimatePresence mode="sync">
+    <motion.div
+      key={heroSlides[currentSlide].image}
+      className="absolute inset-0 w-full h-full"
+      style={{
+        backgroundImage: `url(${heroSlides[currentSlide].image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.5 }}
+    >
+      {/* Premium overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/50 to-black/80" />
+    </motion.div>
+  </AnimatePresence>
 
-        {/* Animated Particles Background (Subtle Texture) */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-white/10 backdrop-blur-sm"
-              style={{
-                width: Math.random() * 5 + 2 + 'px',
-                height: Math.random() * 5 + 2 + 'px',
-                left: Math.random() * 100 + '%',
-                top: Math.random() * 100 + '%',
-              }}
-              animate={{
-                y: [0, Math.random() * 100 - 50],
-                x: [0, Math.random() * 100 - 50],
-                opacity: [0.2, 0.8, 0.2],
-              }}
-              transition={{
-                duration: Math.random() * 10 + 10,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-        </div>
+  {/* Animated Particles Background */}
+  <div className="absolute inset-0 overflow-hidden">
+    {[...Array(15)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-white/10 backdrop-blur-sm"
+        style={{
+          width: Math.random() * 5 + 2 + "px",
+          height: Math.random() * 5 + 2 + "px",
+          left: Math.random() * 100 + "%",
+          top: Math.random() * 100 + "%",
+        }}
+        animate={{
+          y: [0, Math.random() * 100 - 50],
+          x: [0, Math.random() * 100 - 50],
+          opacity: [0.2, 0.8, 0.2],
+        }}
+        transition={{
+          duration: Math.random() * 10 + 10,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        }}
+      />
+    ))}
+  </div>
+
+
 
         {/* Main Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">

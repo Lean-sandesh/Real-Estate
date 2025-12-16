@@ -21,7 +21,12 @@ const agents = [
       facebook: '#',
       twitter: '#',
       linkedin: '#',
-      instagram: '#'
+      instagram: '#',
+      specializations: [
+      "Luxury Villas",
+      "Commercial",
+      "Corporate Lease"
+    ]
     }
   },
   {
@@ -40,7 +45,12 @@ const agents = [
       facebook: '#',
       twitter: '#',
       linkedin: '#',
-      instagram: '#'
+      instagram: '#',
+      specializations: [
+      "Luxury Villas",
+      "Commercial",
+      "Corporate Lease"
+    ]
     }
   },
   {
@@ -59,7 +69,12 @@ const agents = [
       facebook: '#',
       twitter: '#',
       linkedin: '#',
-      instagram: '#'
+      instagram: '#',
+      specializations: [
+      "Luxury Villas",
+      "Commercial",
+      "Corporate Lease"
+    ]
     }
   },
   {
@@ -191,6 +206,10 @@ const Agents = () => {
 
   const [showForm, setShowForm] = useState(false);
 const [selectedAgent, setSelectedAgent] = useState(null);
+const [compareList, setCompareList] = useState([]);
+const [showCompare, setShowCompare] = useState(false); // popup state
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const agentsPerPage = 4;
@@ -219,6 +238,29 @@ const sendInquiry = () => {
 
   setShowForm(false);
 };
+
+
+const toggleCompare = (agent) => {
+  const exists = compareList.find(a => a.id === agent.id);
+
+  if (exists) {
+    setCompareList(compareList.filter(a => a.id !== agent.id));
+    return;
+  }
+
+  if (compareList.length === 2) {
+    alert("You can compare only 2 agents at a time!");
+    return;
+  }
+
+  setCompareList([...compareList, agent]);
+
+  // After selecting 2 agents → open popup
+  if (compareList.length === 1) {
+    setShowCompare(true);
+  }
+};
+
 
   // ✅ filtering logic
   const filteredAgents = agents
@@ -390,7 +432,17 @@ const submitReview = (agentId) => {
              to={`/agent/${agent.id}`}
              className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
               >View Listings
-            </Link>             
+            </Link>  
+
+
+<button
+  onClick={() => toggleCompare(agent)}
+  className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
+>
+  {compareList.find(a => a.id === agent.id) ? "Selected" : "Compare"}
+</button>
+
+           
 
 
               {/* WhatsApp Button */}
@@ -484,7 +536,6 @@ const submitReview = (agentId) => {
           </div>
         ))}
       </div>
-
       
 
       {/* ✅ Pagination Buttons */}
@@ -549,6 +600,52 @@ const submitReview = (agentId) => {
         </div>
       </div>
 
+{/* Agent Compare */}
+{showCompare && compareList.length > 0 && (
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div className="bg-white w-[90%] max-w-3xl rounded-lg p-6 shadow-xl relative">
+
+      {/* Close Button */}
+<button
+  onClick={() => {
+    setShowCompare(false);
+    setCompareList([]);  // auto unselect 2 agents
+  }}
+  className="absolute top-3 right-3 text-xl font-bold"
+>
+  ✖
+</button>
+
+
+      <h2 className="text-xl font-bold mb-4 text-center">Compare Agents</h2>
+
+      <div className="grid grid-cols-2 gap-6">
+
+        {compareList.map(agent => (
+          <div key={agent.id} className="border p-4 rounded-lg shadow-sm">
+            
+            {/* Agent Image */}
+            <img
+              src={agent.image}
+              alt={agent.name}
+              className="w-full h-60 object-cover rounded-md mb-3"
+            />
+
+            <h3 className="text-lg font-bold">{agent.name}</h3>
+
+            <p><b>Experience:</b> {agent.experience} years</p>
+            <p><b>Rating:</b> ⭐ {agent.rating}</p>
+            <p><b>Total Properties:</b> {agent.properties}</p>
+            <p><b>Location:</b> {agent.location}</p>
+          </div>
+        ))}
+
+      </div>
+    </div>
+  </div>
+)}
+
+
 
       {/* Inquiry Modal */}
     {showForm && (
@@ -599,6 +696,8 @@ const submitReview = (agentId) => {
     </div>
   </div>
 )}
+
+
 
     </div>
   );
