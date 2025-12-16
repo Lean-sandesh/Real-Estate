@@ -50,7 +50,24 @@ const Register = () => {
     }
 
     try {
-      const { success, user, error } = await signup(formData);
+      // 🔥 TRANSFORM FRONTEND FORM TO BACKEND FORMAT
+      const payload = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        role: formData.userType === 'agent' ? 'agent' : 'user',
+        address: {
+          street: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+          country: formData.country,
+        },
+      };
+
+      const { success, user, error } = await signup(payload);
+
       if (success) {
         // If backend auto-logged in and returned user, redirect based on role
         const role = user?.role ?? (formData.userType === 'agent' ? 'agent' : 'user');
