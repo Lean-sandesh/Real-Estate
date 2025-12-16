@@ -29,10 +29,11 @@ export default function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       phone: user?.phone || "",
-      city: user?.city || "",
-      state: user?.state || "",
-      country: user?.country || "India",
+      city: user?.address?.city || "",
+      state: user?.address?.state || "",
+      country: user?.address?.country || "",
     });
+
 
     const img =
       user?.image ||
@@ -63,9 +64,17 @@ export default function Profile() {
   const saveProfile = async () => {
     const formData = new FormData();
 
-    Object.keys(form).forEach((key) => formData.append(key, form[key]));
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("phone", form.phone);
+
+    //  send address as nested object
+    formData.append("address[city]", form.city);
+    formData.append("address[state]", form.state);
+    formData.append("address[country]", form.country);
 
     if (imageFile) formData.append("avatar", imageFile);
+
 
     try {
       const res = await userService.updateProfile(formData);
@@ -187,8 +196,9 @@ export default function Profile() {
             <FiMapPin className="text-gray-500" />
             {!editMode ? (
               <p>
-                {user?.city}, {user?.state}, {user?.country}
+                {user?.address?.city}, {user?.address?.state}, {user?.address?.country}
               </p>
+
             ) : (
               <div className="grid grid-cols-3 gap-3 w-full">
                 <input
