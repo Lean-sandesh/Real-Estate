@@ -3,12 +3,12 @@ const generateToken = require('../utils/generateToken');
 const { sendEmail } = require('../utils/emailService');
 const crypto = require('crypto');
 
-/* ---------------------------------------------
-   REGISTER USER 
-----------------------------------------------*/
+// @desc    Register user
+// @route   POST /api/auth/register
+// @access  Public
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, phone, role, company, licenseNumber } = req.body;
+    const { name, email, password, phone, role, address, company, licenseNumber } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -23,6 +23,7 @@ const register = async (req, res, next) => {
       email,
       password,
       phone,
+      address,
       role: role || 'user',
       company,
       licenseNumber,
@@ -53,6 +54,7 @@ const register = async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          address: user.address,
           company: user.company,
           isEmailVerified: user.isEmailVerified
         },
@@ -64,12 +66,12 @@ const register = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   REGISTER AGENT 
-----------------------------------------------*/
+// @desc    Register agent
+// @route   POST /api/auth/register/agent
+// @access  Public
 const registerAgent = async (req, res, next) => {
   try {
-    const { name, email, password, phone, company, licenseNumber, experience, specializations } = req.body;
+    const { name, email, password, phone, address, company, licenseNumber, experience, specializations } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -84,6 +86,7 @@ const registerAgent = async (req, res, next) => {
       email,
       password,
       phone,
+      address,
       role: 'agent',
       company,
       licenseNumber,
@@ -117,6 +120,7 @@ const registerAgent = async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          address: user.address,
           company: user.company,
           licenseNumber: user.licenseNumber,
           isEmailVerified: user.isEmailVerified,
@@ -130,9 +134,9 @@ const registerAgent = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   LOGIN USER  (FULLY FIXED)
-----------------------------------------------*/
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -145,15 +149,6 @@ const login = async (req, res, next) => {
     if (!user)
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
-    // // Email not verified
-    // if (!user.isEmailVerified) {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: 'Please verify your email first'
-    //   });
-    // }
-
-    // Agent must be approved
     if (user.role === "agent" && !user.isActive) {
       return res.status(403).json({
         success: false,
@@ -161,7 +156,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Normal user inactive
     if (user.role === "user" && !user.isActive) {
       return res.status(403).json({
         success: false,
@@ -188,6 +182,7 @@ const login = async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          address: user.address,
           avatar: user.avatar,
           company: user.company,
           isEmailVerified: user.isEmailVerified,
@@ -201,9 +196,9 @@ const login = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   GET ME 
-----------------------------------------------*/
+// @desc    Get current user
+// @route   GET /api/auth/me
+// @access  Private
 const getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
@@ -216,12 +211,12 @@ const getMe = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   UPDATE PROFILE 
-----------------------------------------------*/
+// @desc    Update profile
+// @route   PUT /api/auth/profile
+// @access  Private
 const updateProfile = async (req, res, next) => {
   try {
-    const { name, email, phone, company, bio, website, socialMedia, experience, specializations } = req.body;
+    const { name, email, phone, address, company, bio, website, socialMedia, experience, specializations } = req.body;
 
     if (email && email !== req.user.email) {
       const exist = await User.findOne({ email });
@@ -231,7 +226,7 @@ const updateProfile = async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { name, email, phone, company, bio, website, socialMedia, experience, specializations },
+      { name, email, phone, address, company, bio, website, socialMedia, experience, specializations },
       { new: true, runValidators: true }
     );
 
@@ -245,9 +240,72 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   CHANGE PASSWORD 
-----------------------------------------------*/
+// @desc    Update user location
+// @route   PUT /api/auth/update-location
+// @access  Private
+const updateLocation = async (req, res, next) => {
+  try {
+    const { address } = req.body;
+
+    if (!address || (!address.city && !address.state && !address.country)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide at least city, state, or country'
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+    
+    user.address = {
+      ...user.address.toObject(),
+      ...address
+    };
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Location updated successfully',
+      data: {
+        address: user.address,
+        formattedAddress: user.getFormattedAddress(),
+        hasCompleteLocation: user.hasCompleteLocation(),
+        profileCompletion: user.profileCompletion
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user preferences
+// @route   PUT /api/auth/update-preferences
+// @access  Private
+const updatePreferences = async (req, res, next) => {
+  try {
+    const { preferences } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { preferences },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Preferences updated successfully',
+      data: {
+        preferences: user.preferences
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Change password
+// @route   PUT /api/auth/change-password
+// @access  Private
 const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -273,23 +331,23 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   LOGOUT 
-----------------------------------------------*/
+// @desc    Logout user
+// @route   POST /api/auth/logout
+// @access  Private
 const logout = async (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 };
 
-/* ---------------------------------------------
-   LOGOUT ALL 
-----------------------------------------------*/
+// @desc    Logout from all devices
+// @route   POST /api/auth/logout-all
+// @access  Private
 const logoutAll = async (req, res) => {
   res.json({ success: true, message: 'Logged out from all devices' });
 };
 
-/* ---------------------------------------------
-   FORGOT PASSWORD 
-----------------------------------------------*/
+// @desc    Forgot password
+// @route   POST /api/auth/forgot-password
+// @access  Public
 const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -326,9 +384,9 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   RESET PASSWORD 
-----------------------------------------------*/
+// @desc    Reset password
+// @route   POST /api/auth/reset-password
+// @access  Public
 const resetPassword = async (req, res, next) => {
   try {
     const { token, password } = req.body;
@@ -361,9 +419,9 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   VERIFY EMAIL 
-----------------------------------------------*/
+// @desc    Verify email
+// @route   POST /api/auth/verify-email
+// @access  Public
 const verifyEmail = async (req, res, next) => {
   try {
     const { token } = req.body;
@@ -384,9 +442,9 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   RESEND EMAIL VERIFICATION 
-----------------------------------------------*/
+// @desc    Resend email verification
+// @route   POST /api/auth/resend-verification
+// @access  Public
 const resendVerification = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -423,9 +481,112 @@ const resendVerification = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   ADMIN — GET USERS 
-----------------------------------------------*/
+// @desc    Get users by location
+// @route   GET /api/auth/users/location
+// @access  Private/Admin
+const getUsersByLocation = async (req, res, next) => {
+  try {
+    const { city, state, page = 1, limit = 20 } = req.query;
+    
+    let query = {};
+    
+    if (city) query['address.city'] = new RegExp(city, 'i');
+    if (state) query['address.state'] = new RegExp(state, 'i');
+
+    const users = await User.find(query)
+      .select('-password -resetPasswordToken -resetPasswordExpire -emailVerificationToken')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
+
+    const total = await User.countDocuments(query);
+
+    res.json({
+      success: true,
+      data: {
+        users: users.map(user => ({
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          address: user.address,
+          formattedAddress: user.getFormattedAddress(),
+          isActive: user.isActive,
+          profileCompletion: user.profileCompletion
+        })),
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get agents by location
+// @route   GET /api/auth/agents/location
+// @access  Public
+const getAgentsByLocation = async (req, res, next) => {
+  try {
+    const { city, state, page = 1, limit = 12 } = req.query;
+    
+    const agents = await User.findAgentsByLocation(city, state)
+      .select('name email phone company experience specializations avatar address agentStats')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ 'agentStats.rating': -1, 'agentStats.totalProperties': -1 });
+
+    const total = await User.countDocuments({ 
+      role: 'agent', 
+      isActive: true,
+      ...(city && { 'address.city': new RegExp(city, 'i') }),
+      ...(state && { 'address.state': new RegExp(state, 'i') })
+    });
+
+    const formattedAgents = agents.map(agent => ({
+      id: agent._id,
+      name: agent.name,
+      email: agent.email,
+      phone: agent.phone,
+      company: agent.company,
+      experience: agent.experience,
+      specializations: agent.specializations,
+      avatar: agent.avatar,
+      address: agent.address,
+      formattedAddress: agent.getFormattedAddress(),
+      stats: {
+        rating: agent.agentStats.rating,
+        totalProperties: agent.agentStats.totalProperties,
+        soldProperties: agent.agentStats.soldProperties,
+        reviewsCount: agent.agentStats.reviewsCount
+      },
+      profileCompletion: agent.profileCompletion
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        agents: formattedAgents,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get all users
+// @route   GET /api/auth/users
+// @access  Private/Admin
 const getUsers = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, role, isActive } = req.query;
@@ -459,9 +620,9 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   ADMIN — GET SINGLE USER 
-----------------------------------------------*/
+// @desc    Get single user
+// @route   GET /api/auth/users/:id
+// @access  Private/Admin
 const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id)
@@ -476,9 +637,9 @@ const getUser = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   ADMIN — UPDATE USER STATUS 
-----------------------------------------------*/
+// @desc    Update user status
+// @route   PATCH /api/auth/users/:id/status
+// @access  Private/Admin
 const updateUserStatus = async (req, res, next) => {
   try {
     const { isActive } = req.body;
@@ -502,9 +663,9 @@ const updateUserStatus = async (req, res, next) => {
   }
 };
 
-/* ---------------------------------------------
-   ADMIN — DELETE USER 
-----------------------------------------------*/
+// @desc    Delete user
+// @route   DELETE /api/auth/users/:id
+// @access  Private/Admin
 const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
@@ -530,6 +691,8 @@ module.exports = {
   login,
   getMe,
   updateProfile,
+  updateLocation,
+  updatePreferences,
   changePassword,
   logout,
   logoutAll,
@@ -537,6 +700,8 @@ module.exports = {
   resetPassword,
   verifyEmail,
   resendVerification,
+  getUsersByLocation,
+  getAgentsByLocation,
   getUsers,
   getUser,
   updateUserStatus,

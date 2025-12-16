@@ -7,8 +7,10 @@ const morgan = require('morgan')
 const hpp = require('hpp')
 const cookieParser = require('cookie-parser')
 const path = require('path')
+const fs = require('fs')
 const connectDB = require('./config/database')
 const errorHandler = require('./middleware/errorHandler')
+const { sanitizeInput } = require('./middleware/validationMiddleware')
 const routes = require('./routes')
 
 // Load environment variables
@@ -24,7 +26,7 @@ const requiredEnvVars = [
 
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar])
 if (missingEnvVars.length > 0) {
-  console.error(' Missing required environment variables:', missingEnvVars)
+  console.error('Missing required environment variables:', missingEnvVars)
   process.exit(1)
 }
 
@@ -32,10 +34,14 @@ if (missingEnvVars.length > 0) {
 const isProduction = process.env.NODE_ENV === 'production'
 const isDevelopment = process.env.NODE_ENV === 'development'
 
-// Connect to database
-connectDB()
-
 const app = express()
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads')
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true })
+  console.log('Created uploads directory')
+}
 
 // Hide Express.js information
 app.disable('x-powered-by')
@@ -112,8 +118,11 @@ const corsOptions = {
     
     const allowedOrigins = [
       'http://localhost:3000',
+      'http://localhost:3001',
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173',
       process.env.CLIENT_URL,
       process.env.ADMIN_URL
     ].filter(Boolean)
@@ -154,7 +163,10 @@ app.use(express.urlencoded({
 // Cookie parser
 app.use(cookieParser())
 
-// Custom security middleware (replaces express-mongo-sanitize and xss-clean)
+// Input sanitization middleware
+app.use(sanitizeInput)
+
+// Custom security middleware
 app.use((req, res, next) => {
   // Sanitize request body
   if (req.body && typeof req.body === 'object') {
@@ -174,10 +186,16 @@ function sanitizeObject(obj) {
   if (!obj || typeof obj !== 'object') return;
   
   Object.keys(obj).forEach(key => {
+    // Remove MongoDB operators from keys
+    if (key.startsWith('$')) {
+      delete obj[key];
+      return;
+    }
+    
     if (typeof obj[key] === 'object') {
       sanitizeObject(obj[key]);
     } else if (typeof obj[key] === 'string') {
-      // Remove MongoDB operators
+      // Remove MongoDB operators from string values
       const dangerousPatterns = [
         /\$where/i, /\$eq/i, /\$ne/i, /\$gt/i, /\$gte/i, /\$lt/i, /\$lte/i,
         /\$in/i, /\$nin/i, /\$and/i, /\$or/i, /\$not/i, /\$nor/i,
@@ -219,10 +237,11 @@ app.use(hpp({
   ]
 }))
 
-// Request ID and logging middleware
+// Request ID and timing middleware
 app.use((req, res, next) => {
   req.id = Date.now().toString(36) + Math.random().toString(36).substr(2)
   req.requestTime = new Date().toISOString()
+  req.startTime = Date.now()
   res.setHeader('X-Request-ID', req.id)
   next()
 })
@@ -234,7 +253,7 @@ morgan.token('id', (req) => req.id)
 if (isDevelopment) {
   app.use(morgan('dev'))
 } else {
-  const morganFormat = ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'
+  const morganFormat = ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms ":referrer" ":user-agent"'
   
   app.use(morgan(morganFormat, {
     skip: (req, res) => res.statusCode < 400,
@@ -255,6 +274,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 app.use('/public', express.static(path.join(__dirname, 'public'), {
   maxAge: '7d'
 }))
+
+// Connect to database
+connectDB()
 
 // API information route
 app.get('/api', (req, res) => {
@@ -279,7 +301,7 @@ app.get('/api', (req, res) => {
 app.get('/api/health', (req, res) => {
   const healthCheck = {
     success: true,
-    message: ' Server is running smoothly',
+    message: 'Server is running smoothly',
     timestamp: req.requestTime,
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
@@ -333,7 +355,9 @@ app.get('/api/docs', (req, res) => {
       authentication: {
         register: 'POST /api/auth/register',
         login: 'POST /api/auth/login',
-        profile: 'GET /api/auth/me'
+        profile: 'GET /api/auth/me',
+        updateLocation: 'PUT /api/auth/update-location',
+        updatePreferences: 'PUT /api/auth/update-preferences'
       },
       properties: {
         list: 'GET /api/properties',
@@ -345,7 +369,9 @@ app.get('/api/docs', (req, res) => {
       users: {
         profile: 'GET /api/users/profile',
         favorites: 'GET /api/users/favorites',
-        dashboard: 'GET /api/users/dashboard/stats'
+        dashboard: 'GET /api/users/dashboard/stats',
+        becomeAgent: 'POST /api/users/become-agent',
+        updateLocation: 'PUT /api/users/update-location'
       }
     }
   })
@@ -389,12 +415,20 @@ app.use(errorHandler)
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully')
-  process.exit(0)
+  const mongoose = require('mongoose')
+  mongoose.connection.close(false, () => {
+    console.log('MongoDB connection closed')
+    process.exit(0)
+  })
 })
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully')
-  process.exit(0)
+  const mongoose = require('mongoose')
+  mongoose.connection.close(false, () => {
+    console.log('MongoDB connection closed')
+    process.exit(0)
+  })
 })
 
 process.on('unhandledRejection', (err) => {

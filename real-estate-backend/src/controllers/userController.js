@@ -22,6 +22,7 @@ const getProfile = async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          address: user.address,
           avatar: user.avatar,
           company: user.company,
           licenseNumber: user.licenseNumber,
@@ -49,13 +50,14 @@ const getProfile = async (req, res, next) => {
 // @access  Private
 const updateProfile = async (req, res, next) => {
   try {
-    const { name, phone, bio, website, socialMedia } = req.body;
+    const { name, phone, address, bio, website, socialMedia } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
       {
         name,
         phone,
+        address,
         bio,
         website,
         socialMedia
@@ -75,6 +77,7 @@ const updateProfile = async (req, res, next) => {
           name: user.name,
           email: user.email,
           phone: user.phone,
+          address: user.address,
           avatar: user.avatar,
           bio: user.bio,
           website: user.website,
@@ -93,7 +96,7 @@ const updateProfile = async (req, res, next) => {
 // @access  Private/Agent
 const updateAgentProfile = async (req, res, next) => {
   try {
-    const { company, licenseNumber, experience, specializations, bio } = req.body;
+    const { company, licenseNumber, experience, specializations, bio, address } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
@@ -102,7 +105,8 @@ const updateAgentProfile = async (req, res, next) => {
         licenseNumber,
         experience,
         specializations,
-        bio
+        bio,
+        address
       },
       {
         new: true,
@@ -122,9 +126,87 @@ const updateAgentProfile = async (req, res, next) => {
           experience: user.experience,
           specializations: user.specializations,
           bio: user.bio,
+          address: user.address,
           profileCompletion: user.profileCompletion,
           agentStats: user.agentStats
         }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user location
+// @route   PUT /api/users/update-location
+// @access  Private
+const updateLocation = async (req, res, next) => {
+  try {
+    const { street, city, state, country, postalCode, coordinates } = req.body;
+
+    if (!city || !state || !country) {
+      return res.status(400).json({
+        success: false,
+        message: 'City, state, and country are required'
+      });
+    }
+
+    const updateData = {
+      address: {
+        street,
+        city,
+        state,
+        country,
+        postalCode,
+        coordinates
+      }
+    };
+
+    Object.keys(updateData.address).forEach(key => {
+      if (updateData.address[key] === undefined) {
+        delete updateData.address[key];
+      }
+    });
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Location updated successfully',
+      data: {
+        address: user.address,
+        formattedAddress: user.getFormattedAddress(),
+        profileCompletion: user.profileCompletion,
+        hasCompleteLocation: user.hasCompleteLocation()
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user preferences
+// @route   PUT /api/users/update-preferences
+// @access  Private
+const updatePreferences = async (req, res, next) => {
+  try {
+    const { preferences } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { preferences },
+      { new: true, runValidators: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Preferences updated successfully',
+      data: {
+        preferences: user.preferences
       }
     });
   } catch (error) {
@@ -204,7 +286,6 @@ const changePassword = async (req, res, next) => {
 
     const user = await User.findById(req.user.id).select('+password');
 
-    // Check current password
     if (!(await user.comparePassword(currentPassword))) {
       return res.status(401).json({
         success: false,
@@ -212,14 +293,11 @@ const changePassword = async (req, res, next) => {
       });
     }
 
-    // Update password
     user.password = newPassword;
     await user.save();
 
-    // Generate new token
     const token = generateToken(user._id);
 
-    // Send password change notification email
     try {
       await sendEmail({
         email: user.email,
@@ -251,7 +329,7 @@ const changePassword = async (req, res, next) => {
 // @access  Private
 const becomeAgent = async (req, res, next) => {
   try {
-    const { company, licenseNumber, phone, experience, specializations } = req.body;
+    const { company, licenseNumber, phone, experience, specializations, address } = req.body;
 
     const user = await User.findById(req.user.id);
 
@@ -262,18 +340,17 @@ const becomeAgent = async (req, res, next) => {
       });
     }
 
-    // Update user to agent role with additional info
     user.role = 'agent';
     user.company = company;
     user.licenseNumber = licenseNumber;
     user.phone = phone;
     user.experience = experience;
     user.specializations = specializations;
-    user.isActive = false; // Require admin approval for new agents
+    if (address) user.address = address;
+    user.isActive = false;
 
     await user.save();
 
-    // Notify admin about new agent registration
     try {
       const adminUsers = await User.find({ role: 'admin', isActive: true });
       for (const admin of adminUsers) {
@@ -305,6 +382,7 @@ const becomeAgent = async (req, res, next) => {
           role: user.role,
           company: user.company,
           licenseNumber: user.licenseNumber,
+          address: user.address,
           isActive: user.isActive
         }
       }
@@ -349,7 +427,6 @@ const addToFavorites = async (req, res, next) => {
       });
     }
 
-    // Check if already favorited
     const existingFavorite = await Favorite.findOne({
       user: req.user.id,
       property: req.params.propertyId
@@ -413,7 +490,6 @@ const getDashboardStats = async (req, res, next) => {
     let stats = {};
 
     if (req.user.role === 'agent' || req.user.role === 'admin') {
-      // Agent/Admin stats
       const totalProperties = await Property.countDocuments({ agent: req.user.id });
       const activeProperties = await Property.countDocuments({ 
         agent: req.user.id, 
@@ -437,10 +513,20 @@ const getDashboardStats = async (req, res, next) => {
         status: 'new'
       });
 
-      // Get total views from properties
       const viewsResult = await Property.aggregate([
         { $match: { agent: req.user._id } },
         { $group: { _id: null, totalViews: { $sum: '$views' } } }
+      ]);
+
+      const propertiesByCity = await Property.aggregate([
+        { $match: { agent: req.user._id } },
+        { $group: { 
+          _id: '$location.city', 
+          count: { $sum: 1 },
+          averagePrice: { $avg: '$price' }
+        }},
+        { $sort: { count: -1 } },
+        { $limit: 5 }
       ]);
 
       stats = {
@@ -451,10 +537,12 @@ const getDashboardStats = async (req, res, next) => {
         totalInquiries,
         newInquiries,
         totalViews: viewsResult[0]?.totalViews || 0,
-        totalFavorites: await Favorite.countDocuments({ user: req.user.id })
+        totalFavorites: await Favorite.countDocuments({ user: req.user.id }),
+        locationInsights: {
+          propertiesByCity
+        }
       };
     } else {
-      // Regular user stats
       const favoritesCount = await Favorite.countDocuments({ user: req.user.id });
       const inquiriesCount = await Inquiry.countDocuments({ user: req.user.id });
       const scheduledVisits = await Inquiry.countDocuments({
@@ -462,17 +550,39 @@ const getDashboardStats = async (req, res, next) => {
         visitScheduled: true
       });
 
+      const favoriteLocations = await Favorite.aggregate([
+        { $match: { user: req.user._id } },
+        { $lookup: {
+          from: 'properties',
+          localField: 'property',
+          foreignField: '_id',
+          as: 'property'
+        }},
+        { $unwind: '$property' },
+        { $group: {
+          _id: '$property.location.city',
+          count: { $sum: 1 }
+        }},
+        { $sort: { count: -1 } },
+        { $limit: 3 }
+      ]);
+
       stats = {
         favoritesCount,
         inquiriesCount,
         scheduledVisits,
-        propertiesViewed: 0 // Would need to track view history
+        propertiesViewed: 0,
+        locationPreferences: {
+          favoriteAreas: favoriteLocations
+        }
       };
     }
 
     res.json({
       success: true,
-      data: { stats }
+      data: { 
+        stats
+      }
     });
   } catch (error) {
     next(error);
@@ -485,9 +595,8 @@ const getDashboardStats = async (req, res, next) => {
 const getAgentStats = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
-    await user.updateAgentStats(); // Update stats
+    await user.updateAgentStats();
 
-    // Get recent performance data
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -612,18 +721,106 @@ const getAgentProfile = async (req, res, next) => {
       });
     }
 
-    // Get agent's active properties count
     const activeProperties = await Property.countDocuments({
       agent: agent._id,
       status: 'approved',
       isActive: true
     });
 
+    const agentProperties = await Property.find({
+      agent: agent._id,
+      'location.city': agent.address?.city,
+      status: 'approved',
+      isActive: true
+    })
+    .select('title price type category location images specifications')
+    .limit(6);
+
     res.json({
       success: true,
       data: {
-        agent: agent.getPublicProfile(),
-        activeProperties
+        agent: {
+          id: agent._id,
+          name: agent.name,
+          email: agent.email,
+          phone: agent.phone,
+          avatar: agent.avatar,
+          company: agent.company,
+          licenseNumber: agent.licenseNumber,
+          experience: agent.experience,
+          specializations: agent.specializations,
+          bio: agent.bio,
+          website: agent.website,
+          socialMedia: agent.socialMedia,
+          address: agent.address,
+          formattedAddress: agent.getFormattedAddress(),
+          agentStats: agent.agentStats,
+          profileCompletion: agent.profileCompletion
+        },
+        activeProperties,
+        featuredProperties: agentProperties
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get agents by location
+// @route   GET /api/users/agents/location
+// @access  Public
+const getAgentsByLocation = async (req, res, next) => {
+  try {
+    const { city, state, page = 1, limit = 12 } = req.query;
+    
+    const agents = await User.findAgentsByLocation(city, state)
+      .select('name email phone company experience specializations avatar address agentStats bio')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ 'agentStats.rating': -1, experience: -1 });
+
+    const total = await User.countDocuments({ 
+      role: 'agent', 
+      isActive: true,
+      ...(city && { 'address.city': new RegExp(city, 'i') }),
+      ...(state && { 'address.state': new RegExp(state, 'i') })
+    });
+
+    const formattedAgents = agents.map(agent => ({
+      id: agent._id,
+      name: agent.name,
+      email: agent.email,
+      phone: agent.phone,
+      company: agent.company,
+      experience: agent.experience,
+      specializations: agent.specializations,
+      bio: agent.bio,
+      avatar: agent.avatar,
+      address: {
+        city: agent.address?.city,
+        state: agent.address?.state,
+        country: agent.address?.country,
+        formatted: agent.getFormattedAddress()
+      },
+      stats: {
+        rating: agent.agentStats.rating,
+        totalProperties: agent.agentStats.totalProperties,
+        soldProperties: agent.agentStats.soldProperties,
+        reviewsCount: agent.agentStats.reviewsCount
+      },
+      profileCompletion: agent.profileCompletion
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        agents: formattedAgents,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
       }
     });
   } catch (error) {
@@ -646,7 +843,6 @@ const getAgentReviews = async (req, res, next) => {
 
     const total = await Review.countDocuments({ agent: req.params.id });
 
-    // Calculate average rating
     const ratingStats = await Review.aggregate([
       { $match: { agent: req.params.id } },
       {
@@ -699,7 +895,6 @@ const submitAgentReview = async (req, res, next) => {
       });
     }
 
-    // Check if user already reviewed this agent
     const existingReview = await Review.findOne({
       user: req.user.id,
       agent: req.params.agentId
@@ -722,7 +917,6 @@ const submitAgentReview = async (req, res, next) => {
 
     await review.populate('user', 'name avatar');
 
-    // Update agent stats
     await agent.updateAgentStats();
 
     res.status(201).json({
@@ -735,35 +929,14 @@ const submitAgentReview = async (req, res, next) => {
   }
 };
 
-// @desc    Update user preferences
-// @route   PUT /api/users/preferences
-// @access  Private
-const updatePreferences = async (req, res, next) => {
-  try {
-    const { preferences } = req.body;
 
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      { preferences },
-      { new: true }
-    );
-
-    res.json({
-      success: true,
-      message: 'Preferences updated successfully',
-      data: {
-        preferences: user.preferences
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 module.exports = {
   getProfile,
   updateProfile,
   updateAgentProfile,
+  updateLocation,
+  updatePreferences,
   uploadAvatar,
   deleteAvatar,
   changePassword,
@@ -776,7 +949,8 @@ module.exports = {
   getMyProperties,
   getMyInquiries,
   getAgentProfile,
+  getAgentsByLocation,
   getAgentReviews,
-  submitAgentReview,
-  updatePreferences
+  submitAgentReview
+  
 };

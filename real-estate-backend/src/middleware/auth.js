@@ -46,6 +46,15 @@ const auth = async (req, res, next) => {
         errorType: 'ACCOUNT_DEACTIVATED'
       });
     }
+
+    // For agents, check if they're approved (if needed)
+    if (user.role === 'agent' && !user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Agent account is not approved yet.',
+        errorType: 'AGENT_NOT_APPROVED'
+      });
+    }
     
     req.user = user;
     req.token = token;
@@ -101,6 +110,112 @@ const authorize = (...roles) => {
   };
 };
 
+// ==================== AGENT SPECIFIC MIDDLEWARE ====================
+
+/**
+ * Middleware to check if user is an agent with complete profile
+ */
+const isAgentWithCompleteProfile = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required.',
+        errorType: 'AUTH_REQUIRED'
+      });
+    }
+
+    if (req.user.role !== 'agent' && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only agents can access this resource.',
+        errorType: 'NOT_AGENT'
+      });
+    }
+
+    // Check if agent profile is complete
+    if (req.user.profileCompletion < 70) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please complete your agent profile first.',
+        errorType: 'PROFILE_INCOMPLETE',
+        data: {
+          profileCompletion: req.user.profileCompletion,
+          missingFields: []
+        }
+      });
+    }
+
+    // Check if agent has complete location
+    if (!req.user.hasCompleteLocation()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please complete your location information.',
+        errorType: 'LOCATION_INCOMPLETE'
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('isAgentWithCompleteProfile middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Authorization check failed.',
+      errorType: 'AUTHORIZATION_ERROR'
+    });
+  }
+};
+
+/**
+ * Middleware to check if agent is verified and approved
+ */
+const isVerifiedAgent = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required.',
+        errorType: 'AUTH_REQUIRED'
+      });
+    }
+
+    if (req.user.role !== 'agent' && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only agents can access this resource.',
+        errorType: 'NOT_AGENT'
+      });
+    }
+
+    // Check email verification
+    if (!req.user.isEmailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email address.',
+        errorType: 'EMAIL_NOT_VERIFIED'
+      });
+    }
+
+    // Check if agent is active/approved
+    if (!req.user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Your agent account is pending admin approval.',
+        errorType: 'AGENT_PENDING_APPROVAL'
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('isVerifiedAgent middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Authorization check failed.',
+      errorType: 'AUTHORIZATION_ERROR'
+    });
+  }
+};
+
 // ==================== LOGIN HELPER FUNCTIONS ====================
 
 /**
@@ -123,6 +238,11 @@ const authenticateUser = async (email, password) => {
     // Check if user is active
     if (!user.isActive) {
       throw new Error('Account is deactivated. Please contact support.');
+    }
+
+    // Check if user is agent but not approved
+    if (user.role === 'agent' && !user.isActive) {
+      throw new Error('Your agent account is pending admin approval.');
     }
 
     // Check password using bcrypt directly (in case comparePassword method is missing)
@@ -151,7 +271,10 @@ const authenticateUser = async (email, password) => {
  */
 const generateToken = (userId) => {
   return jwt.sign(
-    { id: userId },
+    { 
+      id: userId,
+      iat: Math.floor(Date.now() / 1000) // Issued at time
+    },
     config.jwt.secret,
     { expiresIn: config.jwt.expiresIn }
   );
@@ -168,12 +291,25 @@ const verifyToken = (token) => {
  * Check if password meets requirements
  */
 const validatePassword = (password) => {
-  const minLength = 6;
+  const minLength = 8; // Updated to match your User model
   
   if (password.length < minLength) {
     return {
       isValid: false,
       message: `Password must be at least ${minLength} characters long`
+    };
+  }
+
+  // Add more password validation rules if needed
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+    return {
+      isValid: false,
+      message: 'Password must contain uppercase, lowercase, numbers, and special characters'
     };
   }
 
@@ -255,6 +391,64 @@ const isOwnerOrAdmin = async (req, res, next) => {
 };
 
 /**
+ * Middleware to check if user can review an agent
+ */
+const canReviewAgent = async (req, res, next) => {
+  try {
+    const agentId = req.params.agentId || req.params.id;
+    
+    // Check if user is trying to review themselves
+    if (agentId === req.user.id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot review yourself.',
+        errorType: 'SELF_REVIEW'
+      });
+    }
+
+    // Check if agent exists and is active
+    const agent = await User.findOne({
+      _id: agentId,
+      role: 'agent',
+      isActive: true
+    });
+
+    if (!agent) {
+      return res.status(404).json({
+        success: false,
+        message: 'Agent not found or not active.',
+        errorType: 'AGENT_NOT_FOUND'
+      });
+    }
+
+    // Check if user has already reviewed this agent
+    const Review = require('../models/Review');
+    const existingReview = await Review.findOne({
+      user: req.user.id,
+      agent: agentId
+    });
+
+    if (existingReview) {
+      return res.status(400).json({
+        success: false,
+        message: 'You have already reviewed this agent.',
+        errorType: 'DUPLICATE_REVIEW'
+      });
+    }
+
+    req.agent = agent;
+    next();
+  } catch (error) {
+    console.error('canReviewAgent middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Review authorization check failed.',
+      errorType: 'REVIEW_AUTH_ERROR'
+    });
+  }
+};
+
+/**
  * Optional authentication (doesn't fail if no token)
  */
 const optionalAuth = async (req, res, next) => {
@@ -268,12 +462,17 @@ const optionalAuth = async (req, res, next) => {
     }
     
     if (token) {
-      const decoded = jwt.verify(token, config.jwt.secret);
-      const user = await User.findById(decoded.id).select('-password');
-      
-      if (user && user.isActive) {
-        req.user = user;
-        req.token = token;
+      try {
+        const decoded = jwt.verify(token, config.jwt.secret);
+        const user = await User.findById(decoded.id).select('-password');
+        
+        if (user && user.isActive) {
+          req.user = user;
+          req.token = token;
+        }
+      } catch (error) {
+        // Invalid token, continue without authentication
+        console.log('Optional auth token error:', error.message);
       }
     }
     
@@ -313,7 +512,8 @@ const userRateLimit = (requestsPerMinute = 60) => {
       return res.status(429).json({
         success: false,
         message: 'Too many requests. Please try again later.',
-        errorType: 'RATE_LIMIT_EXCEEDED'
+        errorType: 'RATE_LIMIT_EXCEEDED',
+        retryAfter: 60 // seconds
       });
     }
     
@@ -321,6 +521,58 @@ const userRateLimit = (requestsPerMinute = 60) => {
     userRequests.push(now);
     next();
   };
+};
+
+/**
+ * Check if user has complete profile
+ */
+const hasCompleteProfile = (minCompletion = 70) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required.',
+        errorType: 'AUTH_REQUIRED'
+      });
+    }
+
+    if (req.user.profileCompletion < minCompletion) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please complete your profile first.',
+        errorType: 'PROFILE_INCOMPLETE',
+        data: {
+          profileCompletion: req.user.profileCompletion,
+          requiredCompletion: minCompletion
+        }
+      });
+    }
+
+    next();
+  };
+};
+
+/**
+ * Check if user has complete location
+ */
+const hasCompleteLocation = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required.',
+      errorType: 'AUTH_REQUIRED'
+    });
+  }
+
+  if (!req.user.hasCompleteLocation()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Please complete your location information.',
+      errorType: 'LOCATION_INCOMPLETE'
+    });
+  }
+
+  next();
 };
 
 // ==================== LOGIN CONTROLLER FUNCTIONS ====================
@@ -357,10 +609,12 @@ const handleLogin = async (req, res) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          address: user.address,
           avatar: user.avatar,
           company: user.company,
           isEmailVerified: user.isEmailVerified,
-          isActive: user.isActive
+          isActive: user.isActive,
+          profileCompletion: user.profileCompletion
         },
         token
       }
@@ -397,8 +651,13 @@ module.exports = {
   auth,
   authorize,
   isOwnerOrAdmin,
+  isAgentWithCompleteProfile,
+  isVerifiedAgent,
+  canReviewAgent,
   optionalAuth,
   userRateLimit,
+  hasCompleteProfile,
+  hasCompleteLocation,
   
   // Authentication functions
   authenticateUser,
