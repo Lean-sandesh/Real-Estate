@@ -14,8 +14,16 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (updatedUser) => {
     setCurrentUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+
+    // IMPORTANT: prevent loadUser overwrite
+    if (updatedUser) {
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } else {
+      localStorage.removeItem("user");
+    }
+
   };
+
 
   // Persist token in localStorage only (per backend requirement)
   const setToken = (token) => {
@@ -47,9 +55,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setCurrentUser(JSON.parse(storedUser));
+        setLoading(false);
+        return;
+      } catch (err) {
+        console.error("Invalid user in localStorage", err);
+        localStorage.removeItem("user");
+      }
+    }
+
     loadUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  ;
+
 
   // LOGIN -> POST /api/auth/login { email, password } => { token, user }
   const login = async (email, password) => {

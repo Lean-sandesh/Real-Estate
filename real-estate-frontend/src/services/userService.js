@@ -1,11 +1,14 @@
-import api from "./api"; // your axios instance
+import api from "./api";
 
-const updateProfile = async (formData) => {
-  return await api.put("/auth/profile", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+export const updateProfile = (data) => {
+  return api.put("/auth/profile", data);
+};
+
+export const updateLocation = (data) => {
+  return api.put("/auth/update-location", data);
 };
 
 export default {
   updateProfile,
+  updateLocation,
 };

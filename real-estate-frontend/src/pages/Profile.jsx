@@ -3,6 +3,8 @@ import { FiUser, FiMail, FiPhone, FiMapPin, FiCamera, FiSave, FiEdit } from "rea
 import { useAuth } from "../context/AuthContext";
 import userService from "../services/userService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+
 
 
 export default function Profile() {
@@ -60,34 +62,41 @@ export default function Profile() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
   const saveProfile = async () => {
+  try {
+    // 1️⃣ Update basic profile
     const formData = new FormData();
-
     formData.append("name", form.name);
     formData.append("email", form.email);
     formData.append("phone", form.phone);
 
-    //  send address as nested object
-    formData.append("address[city]", form.city);
-    formData.append("address[state]", form.state);
-    formData.append("address[country]", form.country);
-
     if (imageFile) formData.append("avatar", imageFile);
 
+    const profileRes = await userService.updateProfile(formData);
 
-    try {
-      const res = await userService.updateProfile(formData);
+    // 2️⃣ Update location (CORRECT endpoint)
+    const locationRes = await userService.updateLocation({
+      address: {
+        city: form.city,
+        state: form.state,
+        country: form.country,
+      },
+    });
 
-      updateUser(res.data.user); // update global user in AuthContext
+    // 3️⃣ Update auth context
+    updateUser({
+      ...profileRes.data.data.user,
+      address: locationRes.data.data.address,
+    });
 
-      alert("Profile updated successfully!");
-      setEditMode(false);
-    } catch (err) {
-      console.error(err);
-      alert("Error updating profile");
-    }
-  };
+    toast.success("Profile updated successfully");
+    setEditMode(false);
+
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Update failed");
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
