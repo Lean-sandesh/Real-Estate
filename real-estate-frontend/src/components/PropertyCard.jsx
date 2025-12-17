@@ -9,17 +9,10 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useFavorites } from "../context/FavoritesContext";
 import { useAuth } from "../context/AuthContext";
 
-
-
-
 export default function PropertyCard({ property }) {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const [current, setCurrent] = useState(0);
   const { user } = useAuth();
-
-
-
-
 
   // If images is array of objects -> extract url & label
   const imgArray = property?.images?.length
@@ -224,7 +217,7 @@ PropertyCard.propTypes = {
     location: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     area: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     rating: PropTypes.number,
     beds: PropTypes.number,
     baths: PropTypes.number,
