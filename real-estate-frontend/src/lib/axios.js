@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://real-estate-backend-38mq.onrender.com';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://real-estate-backend-38mq.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE,
