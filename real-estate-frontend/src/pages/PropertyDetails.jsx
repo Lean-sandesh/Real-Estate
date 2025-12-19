@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMapPin, FiShare2, FiHeart, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaBed, FaBath, FaRulerCombined, FaParking, FaSwimmingPool, FaWifi, FaTv, FaSnowflake, FaDumbbell, FaUtensils, FaCoffee, FaWineGlassAlt, FaPhoneAlt, FaEnvelope, FaWhatsapp, FaArrowRight } from 'react-icons/fa';
 import { IoIosArrowForward } from 'react-icons/io';
-import similarProperties from '../data/similarProperties.json';
+// import similarProperties from '../data/similarProperties.json';
 
 // Mock data - in a real app, this would come from an API
 const mockProperty = [{
@@ -13,7 +13,13 @@ const mockProperty = [{
   price: '₹1.5 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Andheri West, Mumbai, Maharashtra',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Andheri West Metro Station', distance: '1.4 km' },
+    { name: 'Infinity Mall, Andheri', distance: '2.1 km' },
+    { name: 'Lokhandwala Market', distance: '2.8 km' },
+    { name: 'Juhu Beach', distance: '3.5 km' }
+  ],
+  address: 'Flat No. 1203, Shree Heights, Veera Desai Road, Andheri West, Mumbai, Maharashtra 400053',
   type: 'Apartment',
   area: '1450 sqft',
   carpetArea: '1250 sqft',
@@ -35,7 +41,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.uniqueshanti.com/wp-content/uploads/2018/11/007-2.jpg',
@@ -62,8 +67,14 @@ const mockProperty = [{
   title: 'Modern 2BHK Flat in Pune',
   price: '₹75 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Kharadi, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Kharadi, Pune, Maharashtra',
+  landmarks: [
+    { name: 'EON IT Park', distance: '1.6 km' },
+    { name: 'World Trade Center Pune', distance: '2.3 km' },
+    { name: 'Phoenix Marketcity, Viman Nagar', distance: '4.8 km' },
+    { name: 'Pune International Airport', distance: '7.5 km' }
+  ],
+  address: 'Flat No. 502, Sky Avenue Apartments, EON IT Park Road, Kharadi, Pune, Maharashtra 411014',
   type: 'Flat',
   area: '950 sqft',
   carpetArea: '750 sqft',
@@ -78,14 +89,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiC3tThHp5Jp39N9AwLG-2CraME1zRfU7t06zKEPvyxUgOgw8Ug453NfojBR-1ap46MF3_UKqwP58cirRWYj_qzyOeCaU7FYBod8ZLE9PK9P-0ELRTucUvtPL0RhESmjBjrEad2XmTdHZOFuqiltFqf1TYI92KL32JNKoNPyf1Vr8cqk7aN2Ve8HEPR/s1600/IMG-20221205-WA0006.jpg',
@@ -109,8 +117,14 @@ const mockProperty = [{
   title: 'Villa with Private Pool',
   price: '₹3.8 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Whitefield, Bangalore',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Whitefield, Bangalore, Karnataka',
+  landmarks: [
+    { name: 'ITPL (International Tech Park)', distance: '2.8 km' },
+    { name: 'Forum Neighbourhood Mall', distance: '4.1 km' },
+    { name: 'Vydehi Hospital', distance: '3.6 km' },
+    { name: 'Hope Farm Junction Metro Station', distance: '3.2 km' }
+  ],
+  address: 'Villa No. 18, Adarsh Palm Retreat, Off Varthur Road, Whitefield, Bangalore, Karnataka 560066',
   type: 'Villa',
   area: '2800 sqft',
   carpetArea: '2600 sqft',
@@ -153,11 +167,17 @@ const mockProperty = [{
 },
 {
   id: 4,
-  title: '1BHK Apartment for Rent',
+  title: '2BHK Apartment',
   price: '₹1 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Indiranagar, Bangalore',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Indiranagar, Bangalore, Karnataka',
+  landmarks: [
+    { name: 'Indiranagar Metro Station', distance: '0.9 km' },
+    { name: '100 Feet Road', distance: '1.2 km' },
+    { name: 'Manipal Hospital, Old Airport Road', distance: '2.6 km' },
+    { name: 'MG Road', distance: '4.5 km' }
+  ],
+  address: 'Flat No. 304, Sri Sai Residency, 12th Main Road, HAL 2nd Stage, Indiranagar, Bangalore, Karnataka 560038',
   type: 'Apartment',
   area: '650 sqft',
   carpetArea: '500 sqft',
@@ -179,7 +199,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://media.designcafe.com/wp-content/uploads/2021/06/30135419/modern-1bhk-home-living-room-designed-with-comfortable-couch-and-tv-unit.jpg',
@@ -204,8 +223,14 @@ const mockProperty = [{
   title: '3BHK Flat in HSR Layout',
   price: '₹1.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'HSR Layout, Bangalore',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'HSR Layout, Bangalore, Karnataka',
+  landmarks: [
+    { name: 'HSR BDA Complex', distance: '1.3 km' },
+    { name: 'Agara Lake', distance: '2.4 km' },
+    { name: 'NIFT College', distance: '1.9 km' },
+    { name: 'Silk Board Junction', distance: '3.2 km' }
+  ],
+  address: 'Flat No. 401, Green View Residency, 5th Sector, HSR Layout, Bangalore, Karnataka 560102',
   type: 'Flat',
   area: '1350 sqft',
   carpetArea: '1200 sqft',
@@ -227,7 +252,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://imagecdn.99acres.com/media1/26902/9/538049253M-1755114442118.jpg',
@@ -252,8 +276,14 @@ const mockProperty = [{
   title: '2BHK Flat in Electronic City',
   price: '₹18,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Electronic City, Bangalore',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Electronic City, Bangalore, Karnataka',
+  landmarks: [
+    { name: 'Infosys Campus, Electronic City', distance: '1.8 km' },
+    { name: 'Electronic City Metro Station', distance: '2.2 km' },
+    { name: 'NeoMall', distance: '3.1 km' },
+    { name: 'Hosur Road', distance: '1.4 km' }
+  ],
+  address: 'Flat No. 702, SJR Blue Waters Apartments, Phase 1, Electronic City, Bangalore, Karnataka 560100',
   type: 'Flat',
   area: '850 sqft',
   carpetArea: '700 sqft',
@@ -268,14 +298,10 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dyimg2.realestateindia.com/prop_images/1392069/775829_1.jpg',
@@ -303,7 +329,13 @@ const mockProperty = [{
   price: '₹5.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Bandra West, Mumbai, Maharashtra',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Bandra Bandstand', distance: '1.9 km' },
+    { name: 'Mount Mary Church', distance: '1.4 km' },
+    { name: 'Linking Road', distance: '2.2 km' },
+    { name: 'Bandra Railway Station', distance: '2.6 km' }
+  ],
+  address: 'Penthouse No. PH-1, Sea Breeze Towers, Pali Hill Road, Bandra West, Mumbai, Maharashtra 400050',
   type: 'Penthouse',
   area: '3200 sqft',
   carpetArea: '3000 sqft',
@@ -350,8 +382,14 @@ const mockProperty = [{
   title: '1BHK Studio Apartment',
   price: '₹15,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Koramangala, Bangalore',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Koramangala, Bangalore, Karnataka',
+  landmarks: [
+    { name: 'Forum Mall', distance: '1.2 km' },
+    { name: 'Jyoti Nivas College', distance: '0.8 km' },
+    { name: 'Sony World Signal', distance: '1.6 km' },
+    { name: 'Christ University', distance: '2.9 km' }
+  ],
+  address: 'Flat No. 205, Sunrise Residency, 5th Block, Koramangala, Bangalore, Karnataka 560034',
   type: 'Studio',
   area: '500 sqft',
   carpetArea: '400 sqft',
@@ -366,14 +404,9 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
-    { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/uzuvzhv_1763028449_672272241_med.jpg',
@@ -397,8 +430,14 @@ const mockProperty = [{
   title: '1BHK Apartment',
   price: '₹16,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Karve Nagar, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Karve Nagar, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Karve Nagar Bus Stop', distance: '0.6 km' },
+    { name: 'Karve Road', distance: '1.4 km' },
+    { name: 'MIT College of Engineering', distance: '2.3 km' },
+    { name: 'Cummins College Road', distance: '2.0 km' }
+  ],
+  address: 'Flat No. 302, Shree Ganesh Residency, Karve Nagar Main Road, Karve Nagar, Pune, Maharashtra 411052',
   type: 'Apartment',
   area: '550 sqft',
   carpetArea: '450 sqft',
@@ -413,14 +452,10 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://cf.bstatic.com/xdata/images/hotel/max300/785650897.jpg?k=85cec98266e72db4fae55e8cd41f0013d55c6b8b6ea66b1471540b93b123e5f7&o=',
@@ -444,8 +479,14 @@ const mockProperty = [{
   title: '2BHK Apartment',
   price: '₹25,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Karve Nagar, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Karve Nagar, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Karve Nagar Garden', distance: '0.5 km' },
+    { name: 'Karve Nagar Bus Stop', distance: '0.8 km' },
+    { name: 'MIT College Road', distance: '2.1 km' },
+    { name: 'Warje Malwadi', distance: '3.0 km' }
+  ],
+  address: 'Flat No. 504, Shubham Heights, Near Karve Nagar Garden, Karve Nagar, Pune, Maharashtra 411052',
   type: 'Apartment',
   area: '1050 sqft',
   carpetArea: '900 sqft',
@@ -460,14 +501,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_5.jpg',
@@ -492,8 +530,14 @@ const mockProperty = [{
   title: 'Modern 2BHK Flat in Mumbai',
   price: '₹1.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Lokhandwala, Mumbai',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Lokhandwala, Mumbai, Maharashtra',
+  landmarks: [
+    { name: 'Lokhandwala Market', distance: '0.6 km' },
+    { name: 'Infinity Mall, Andheri', distance: '1.8 km' },
+    { name: 'Versova Metro Station', distance: '2.1 km' },
+    { name: 'Juhu Beach', distance: '3.4 km' }
+  ],
+  address: 'Flat No. 903, Emerald Heights, Lokhandwala Complex, Andheri West, Mumbai, Maharashtra 400053',
   type: 'Apartment',
   area: '1050 sqft',
   carpetArea: '900 sqft',
@@ -515,7 +559,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.uniqueshanti.com/wp-content/uploads/2018/11/10-2.jpg',
@@ -541,8 +584,14 @@ const mockProperty = [{
   title: 'Premium 4BHK Villa',
   price: '₹2.5 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Lonavala, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Lonavala, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Lion’s Point', distance: '3.6 km' },
+    { name: 'Lonavala Lake', distance: '2.4 km' },
+    { name: 'Bhushi Dam', distance: '5.1 km' },
+    { name: 'Lonavala Railway Station', distance: '2.9 km' }
+  ],
+  address: 'Villa No. 12, Green Valley Villas, Old Pune–Mumbai Highway, Lonavala, Maharashtra 410401',
   type: 'Villa',
   area: '2200 sqft',
   carpetArea: '2000 sqft',
@@ -588,8 +637,14 @@ const mockProperty = [{
   title: '3BHK Apartment',
   price: '₹32,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Karve Nagar, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Karve Nagar, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Karve Nagar Chowk', distance: '0.7 km' },
+    { name: 'Karve Nagar Garden', distance: '0.9 km' },
+    { name: 'MIT College Road', distance: '2.0 km' },
+    { name: 'Warje Malwadi Bus Depot', distance: '3.2 km' }
+  ],
+  address: 'Flat No. 701, Sai Shraddha Residency, Near Karve Nagar Chowk, Karve Nagar, Pune, Maharashtra 411052',
   type: 'Apartment',
   area: '1200 sqft',
   carpetArea: '1000 sqft',
@@ -604,14 +659,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://img.squareyards.com/secondaryPortal/IN_638927548243524144-060925112704274.jpeg?aio=w-400;h-250;crop;',
@@ -637,8 +690,14 @@ const mockProperty = [{
   title: '4BHK Apartment',
   price: '₹36,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Baner, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Baner, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Baner Road', distance: '1.1 km' },
+    { name: 'Balewadi High Street', distance: '2.6 km' },
+    { name: 'Pashan Lake', distance: '3.4 km' },
+    { name: 'Hinjewadi IT Park', distance: '6.8 km' }
+  ],
+  address: 'Flat No. 1002, Blue Ridge Residency, Baner–Pashan Link Road, Baner, Pune, Maharashtra 411045',
   type: 'Apartment',
   area: '2100 sqft',
   carpetArea: '1900 sqft',
@@ -653,14 +712,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-11.webp',
@@ -686,8 +742,14 @@ const mockProperty = [{
   title: '1BHK Apartment',
   price: '₹50 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Wakad, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Wakad, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Wakad Bus Stop', distance: '0.5 km' },
+    { name: 'Amanora Mall', distance: '3.2 km' },
+    { name: 'Hinjewadi IT Park', distance: '6.5 km' },
+    { name: 'Rajiv Gandhi Infotech Park', distance: '6.8 km' }
+  ],
+  address: 'Flat No. 204, Sunshine Residency, Near Wakad Chowk, Wakad, Pune, Maharashtra 411057',
   type: 'Apartment',
   area: '800 sqft',
   carpetArea: '650 sqft',
@@ -709,7 +771,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dynamic.realestateindia.com/prop_images/3760972/1354563_2.jpeg',
@@ -734,8 +795,14 @@ const mockProperty = [{
   title: 'Premium 3BHK Villa',
   price: '₹2.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Koregaon Park, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Koregaon Park, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Osho Ashram', distance: '0.5 km' },
+    { name: 'Koregaon Park Plaza', distance: '1.2 km' },
+    { name: 'Magarpatta City', distance: '5.8 km' },
+    { name: 'Pune Airport', distance: '12 km' }
+  ],
+  address: 'Villa No. 7, Emerald Residency, North Main Road, Koregaon Park, Pune, Maharashtra 411001',
   type: 'Villa',
   area: '1600 sqft',
   carpetArea: '1450 sqft',
@@ -784,8 +851,14 @@ const mockProperty = [{
   title: '3BHK Luxury Apartment',
   price: '₹32,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Kharadi, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Kharadi, Pune, Maharashtra',
+  landmarks: [
+    { name: 'EON IT Park', distance: '1.5 km' },
+    { name: 'World Trade Center Pune', distance: '2.3 km' },
+    { name: 'Phoenix Marketcity, Viman Nagar', distance: '4.7 km' },
+    { name: 'Pune International Airport', distance: '7.4 km' }
+  ],
+  address: 'Flat No. 1205, Galaxy Residency, EON IT Park Road, Kharadi, Pune, Maharashtra 411014',
   type: 'Apartment',
   area: '1500 sqft',
   carpetArea: '1300 sqft',
@@ -800,14 +873,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dynamic.realestateindia.com/prop_images/3269472/1220018_1.jpg',
@@ -833,7 +904,13 @@ const mockProperty = [{
   price: '₹85 L',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Andheri West, Mumbai, Maharashtra',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Andheri West Metro Station', distance: '1.2 km' },
+    { name: 'Infinity Mall, Andheri', distance: '2.0 km' },
+    { name: 'Lokhandwala Market', distance: '1.8 km' },
+    { name: 'Juhu Beach', distance: '3.5 km' }
+  ],
+  address: 'Flat No. 1204, Silver Oaks Residency, Veera Desai Road, Andheri West, Mumbai, Maharashtra 400053',
   type: 'Apartment',
   area: '950 sqft',
   carpetArea: '800 sqft',
@@ -855,7 +932,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_1.jpg',
@@ -880,8 +956,14 @@ const mockProperty = [{
   title: '4BHK Ultra Luxury Villa',
   price: '₹3.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Jubilee Hills, Hyderabad',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Jubilee Hills, Hyderabad, Telangana',
+  landmarks: [
+    { name: 'Jubilee Hills Check Post', distance: '0.9 km' },
+    { name: 'Shilparamam Cultural Village', distance: '2.5 km' },
+    { name: 'Inorbit Mall, Jubilee Hills', distance: '1.8 km' },
+    { name: 'Raj Bhavan, Hyderabad', distance: '3.2 km' }
+  ],
+  address: 'Villa No. 5, Palm Grove Residency, Road No. 36, Jubilee Hills, Hyderabad, Telangana 500033',
   type: 'Villa',
   area: '3000 sqft',
   carpetArea: '2800 sqft',
@@ -928,8 +1010,14 @@ const mockProperty = [{
   title: '1BHK Studio Apartment',
   price: '₹25,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Koramangala, Bengaluru',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Koramangala, Bengaluru, Karnataka',
+  landmarks: [
+    { name: 'Forum Mall Koramangala', distance: '1.2 km' },
+    { name: 'Jyoti Nivas College', distance: '0.9 km' },
+    { name: 'St. John’s Hospital', distance: '1.5 km' },
+    { name: 'Koramangala 80 Feet Road', distance: '1.0 km' }
+  ],
+  address: 'Flat No. 306, Maple Residency, 7th Block, Koramangala, Bengaluru, Karnataka 560095',
   type: 'Apartment',
   area: '600 sqft',
   carpetArea: '500 sqft',
@@ -944,14 +1032,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/ff67bdfa-5bae-4590-8cc7-f86d61c176a0.jpeg?im_w=1200',
@@ -977,7 +1062,13 @@ const mockProperty = [{
   price: '₹1.1 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Dwarka Sector 11, Delhi',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Dwarka Sector 11 Metro Station', distance: '0.8 km' },
+    { name: 'Dwarka District Park', distance: '1.5 km' },
+    { name: 'Maharaja Surajmal Institute', distance: '2.3 km' },
+    { name: 'IGI Airport', distance: '11 km' }
+  ],
+  address: 'Flat No. 403, Green Residency, Sector 11, Dwarka, Delhi, Delhi 110075',
   type: 'Apartment',
   area: '1450 sqft',
   carpetArea: '1300 sqft',
@@ -999,7 +1090,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://im.proptiger.com/1/3109067/6/dwarka-mor-affordable-homes-elevation-117971152.jpeg?width=1336&height=768',
@@ -1023,8 +1113,14 @@ const mockProperty = [{
   title: '2BHK Semi-Furnished Flat',
   price: '₹22,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Wakad, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Wakad, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Wakad Bus Stop', distance: '0.5 km' },
+    { name: 'Amanora Mall', distance: '3.1 km' },
+    { name: 'Hinjewadi IT Park', distance: '6.7 km' },
+    { name: 'Rajiv Gandhi Infotech Park', distance: '6.9 km' }
+  ],
+  address: 'Flat No. 405, Shree Sai Residency, Near Wakad Chowk, Wakad, Pune, Maharashtra 411057',
   type: 'Apartment',
   area: '900 sqft',
   carpetArea: '750 sqft',
@@ -1039,14 +1135,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_153651.jpg',
@@ -1073,7 +1166,13 @@ const mockProperty = [{
   price: '₹4.5 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Powai, Mumbai, Maharashtra',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Powai Lake', distance: '0.5 km' },
+    { name: 'Hiranandani Business Park', distance: '1.2 km' },
+    { name: 'Inorbit Mall, Powai', distance: '1.8 km' },
+    { name: 'International Institute of Hotel Management', distance: '2.5 km' }
+  ],
+  address: 'Penthouse No. PH-5, Lakeview Towers, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076',
   type: 'Penthouse',
   area: '3200 sqft',
   carpetArea: '3000 sqft',
@@ -1121,8 +1220,14 @@ const mockProperty = [{
   title: '2BHK Fully Furnished Apartment',
   price: '₹38,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Hitech City, Hyderabad',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Hitech City, Hyderabad, Telangana',
+  landmarks: [
+    { name: 'Hitech City Metro Station', distance: '1.1 km' },
+    { name: 'Cyber Towers', distance: '1.5 km' },
+    { name: 'Inorbit Mall, Hitech City', distance: '2.3 km' },
+    { name: 'Gachibowli Stadium', distance: '4.0 km' }
+  ],
+  address: 'Flat No. 504, Skyline Residency, Near Laxmi Cyber City, Hitech City, Hyderabad, Telangana 500081',
   type: 'Apartment',
   area: '1100 sqft',
   carpetArea: '950 sqft',
@@ -1137,14 +1242,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/4a/skyla-serviced-apartments.jpg?w=1600&h=-1&s=1',
@@ -1169,8 +1272,14 @@ const mockProperty = [{
   title: '1BHK Budget Flat',
   price: '₹45 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Mira Road, Mumbai',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Mira Road, Mumbai, Maharashtra',
+  landmarks: [
+    { name: 'Mira Road Railway Station', distance: '1.0 km' },
+    { name: 'Orchid School', distance: '1.5 km' },
+    { name: 'Infiniti Mall, Malad', distance: '6.8 km' },
+    { name: 'Gorai Beach', distance: '8.5 km' }
+  ],
+  address: 'Flat No. 203, Shree Sai Residency, Mira Road West, Mumbai, Maharashtra 401107',
   type: 'Apartment',
   area: '650 sqft',
   carpetArea: '500 sqft',
@@ -1185,14 +1294,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0000.jpg',
@@ -1218,8 +1325,14 @@ const mockProperty = [{
   title: '3BHK Corner Flat',
   price: '₹28,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'BTM Layout, Bengaluru',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'BTM Layout, Bengaluru, Karnataka',
+  landmarks: [
+    { name: 'BTM Layout Bus Stop', distance: '0.7 km' },
+    { name: 'Forum Mall, Koramangala', distance: '2.5 km' },
+    { name: 'St. John’s Hospital', distance: '1.8 km' },
+    { name: 'Koramangala 80 Feet Road', distance: '2.2 km' }
+  ],
+  address: 'Flat No. 702, Greenfield Residency, 2nd Stage, BTM Layout, Bengaluru, Karnataka 560076',
   type: 'Apartment',
   area: '1300 sqft',
   carpetArea: '1100 sqft',
@@ -1234,14 +1347,8 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
-    { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
-    { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_2.jpg',
@@ -1267,8 +1374,14 @@ const mockProperty = [{
   title: '4BHK Modern Villa',
   price: '₹2.9 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Whitefield, Bengaluru',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Whitefield, Bengaluru, Karnataka',
+  landmarks: [
+    { name: 'ITPL (International Tech Park)', distance: '2.5 km' },
+    { name: 'Forum Neighbourhood Mall', distance: '3.8 km' },
+    { name: 'Vydehi Hospital', distance: '4.0 km' },
+    { name: 'Hope Farm Junction Metro Station', distance: '3.3 km' }
+  ],
+  address: 'Villa No. 22, Palm Grove Villas, Varthur Road, Whitefield, Bengaluru, Karnataka 560066',
   type: 'Villa',
   area: '2800 sqft',
   carpetArea: '1100 sqft',
@@ -1315,7 +1428,13 @@ const mockProperty = [{
   price: '₹52,000/month',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Noida Sector 76, Delhi NCR',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Sector 76 Metro Station', distance: '1.1 km' },
+    { name: 'The Great India Place Mall', distance: '5.8 km' },
+    { name: 'Shiv Nadar School', distance: '2.3 km' },
+    { name: 'Noida Golf Course', distance: '3.7 km' }
+  ],
+  address: 'Flat No. 1203, Royale Residency, Sector 76, Noida, Uttar Pradesh 201301',
   type: 'Apartment',
   area: '1550 sqft',
   carpetArea: '1350 sqft',
@@ -1337,7 +1456,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595726.jpg?k=3b42c98d7911b80934b0ca30826e6d0c1aee228dd94020d7cd996d61d0088a62&o=',
@@ -1363,8 +1481,14 @@ const mockProperty = [{
   title: '2BHK Compact Flat',
   price: '₹62 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Kalyani Nagar, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Kalyani Nagar, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Kalyani Nagar Bus Stop', distance: '0.7 km' },
+    { name: 'Phoenix Marketcity Mall', distance: '1.5 km' },
+    { name: 'Ruby Hall Clinic', distance: '1.2 km' },
+    { name: 'Magarpatta City', distance: '3.6 km' }
+  ],
+  address: 'Flat No. 305, Silver Oak Residency, Kalyani Nagar Main Road, Pune, Maharashtra 411006',
   type: 'Apartment',
   area: '780 sqft',
   carpetArea: '600 sqft',
@@ -1379,14 +1503,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://gladwinsrealty.com/app/web/upload/medium/169_7592478d631874dbd2e2dfddbf88498a.jpg',
@@ -1411,8 +1532,14 @@ const mockProperty = [{
   title: '4BHK Premium Apartment',
   price: '₹55,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Gachibowli, Hyderabad',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Gachibowli, Hyderabad, Telangana',
+  landmarks: [
+    { name: 'Gachibowli Metro Station', distance: '1.2 km' },
+    { name: 'Microsoft Campus', distance: '2.0 km' },
+    { name: 'Inorbit Mall, Hitech City', distance: '3.5 km' },
+    { name: 'Gachibowli Stadium', distance: '2.8 km' }
+  ],
+  address: 'Flat No. 1208, Palm Grove Residency, Near Hitech City Road, Gachibowli, Hyderabad, Telangana 500032',
   type: 'Apartment',
   area: '2400 sqft',
   carpetArea: '2200 sqft',
@@ -1427,14 +1554,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_141740__Building%20View.jpg',
@@ -1460,8 +1585,14 @@ const mockProperty = [{
   title: '1BHK Affordable Flat',
   price: '₹32 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Ulwe, Navi Mumbai',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Ulwe, Navi Mumbai, Maharashtra',
+  landmarks: [
+    { name: 'Ulwe Railway Station', distance: '1.0 km' },
+    { name: 'Palm Beach Road', distance: '3.5 km' },
+    { name: 'CIDCO Garden', distance: '2.1 km' },
+    { name: 'Belapur CBD', distance: '6.8 km' }
+  ],
+  address: 'Flat No. 102, Shree Sai Residency, Sector 12, Ulwe, Navi Mumbai, Maharashtra 410206',
   type: 'Apartment',
   area: '600 sqft',
   carpetArea: '450 sqft',
@@ -1476,14 +1607,10 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
-    { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3161-n.jpg',
@@ -1507,8 +1634,14 @@ const mockProperty = [{
   title: '3BHK Elite Apartment',
   price: '₹48,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Banashankari, Bengaluru',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Banashankari, Bengaluru, Karnataka',
+  landmarks: [
+    { name: 'Banashankari Temple', distance: '1.2 km' },
+    { name: 'Kengeri Metro Station', distance: '4.5 km' },
+    { name: 'Jayanagar Shopping Complex', distance: '3.8 km' },
+    { name: 'Sri Adichunchanagiri College', distance: '2.6 km' }
+  ],
+  address: 'Flat No. 603, Green Meadows Residency, 3rd Stage, Banashankari, Bengaluru, Karnataka 560085',
   type: 'Apartment',
   area: '1600 sqft',
   carpetArea: '1400 sqft',
@@ -1555,8 +1688,14 @@ const mockProperty = [{
   title: '2BHK Garden Facing Flat',
   price: '₹75 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Viman Nagar, Pune',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Viman Nagar, Pune, Maharashtra',
+  landmarks: [
+    { name: 'Viman Nagar Bus Stop', distance: '0.6 km' },
+    { name: 'Phoenix Marketcity Mall', distance: '2.0 km' },
+    { name: 'Symbiosis College', distance: '1.5 km' },
+    { name: 'Pune International Airport', distance: '4.5 km' }
+  ],
+  address: 'Flat No. 302, Green Acres Residency, Viman Nagar Main Road, Pune, Maharashtra 411014',
   type: 'Apartment',
   area: '900 sqft',
   carpetArea: '750 sqft',
@@ -1571,14 +1710,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-25-1170x785.jpeg',
@@ -1605,7 +1742,13 @@ const mockProperty = [{
   price: '₹2.1 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Panchkula, Delhi NCR',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Panchkula Bus Stand', distance: '1.2 km' },
+    { name: 'Leisure Valley Park', distance: '2.0 km' },
+    { name: 'St. Soldier School', distance: '1.8 km' },
+    { name: 'Chandigarh Airport', distance: '12 km' }
+  ],
+  address: 'House No. 56, Green Valley Residency, Sector 7, Panchkula, Haryana 134109',
   type: 'Independent House',
   area: '2600 sqft',
   carpetArea: '2450 sqft',
@@ -1627,7 +1770,6 @@ const mockProperty = [{
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://www.guptasen.com/wp-content/uploads/2025/03/bright-airy-living-room-vascon-orchids-linking-road-santacruz-west.webp',
@@ -1652,8 +1794,14 @@ const mockProperty = [{
   title: '3BHK Highrise Flat',
   price: '₹40,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Thane, Mumbai',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Thane, Mumbai, Maharashtra',
+  landmarks: [
+    { name: 'Thane Railway Station', distance: '3.0 km' },
+    { name: 'Korum Mall', distance: '1.8 km' },
+    { name: 'Upvan Lake', distance: '2.5 km' },
+    { name: 'Hiranandani Hospital', distance: '2.2 km' }
+  ],
+  address: 'Flat No. 1205, Skyline Towers, Ghodbunder Road, Thane West, Mumbai, Maharashtra 400607',
   type: 'Apartment',
   area: '1400 sqft',
   carpetArea: '1200 sqft',
@@ -1668,14 +1816,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://0009.in/wp-content/uploads/classified-listing/2021/12/u.webp',
@@ -1700,8 +1846,14 @@ const mockProperty = [{
   title: '2BHK Modern Flat',
   price: '₹60 L',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Kondapur, Hyderabad',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Kondapur, Hyderabad, Telangana',
+  landmarks: [
+    { name: 'Mindspace IT Park', distance: '1.0 km' },
+    { name: 'Hitech City Metro Station', distance: '2.2 km' },
+    { name: 'Forum Sujana Mall', distance: '3.5 km' },
+    { name: 'Inorbit Mall, Hitech City', distance: '2.8 km' }
+  ],
+  address: 'Flat No. 305, Maple Residency, Near Mindspace IT Park, Kondapur, Hyderabad, Telangana 500081',
   type: 'Apartment',
   area: '850 sqft',
   carpetArea: '700 sqft',
@@ -1716,14 +1868,12 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://is1-2.housingcdn.com/4f2250e8/4560dacc3d4e5e99cd138672b8718015/v5/medium.jpg',
@@ -1748,8 +1898,14 @@ const mockProperty = [{
   title: '2BHK Sea-facing Apartment',
   price: '₹55,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Bandra West, Mumbai',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Bandra West, Mumbai, Maharashtra',
+  landmarks: [
+    { name: 'Bandra Bandstand', distance: '0.8 km' },
+    { name: 'Mount Mary Church', distance: '1.2 km' },
+    { name: 'Linking Road', distance: '1.5 km' },
+    { name: 'Bandra Railway Station', distance: '2.0 km' }
+  ],
+  address: 'Flat No. 703, Sea Breeze Residency, Pali Hill Road, Bandra West, Mumbai, Maharashtra 400050',
   type: 'Apartment',
   area: '1100 sqft',
   carpetArea: '900 sqft',
@@ -1764,14 +1920,11 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/1-1661189264-VuCV5.jpg',
@@ -1796,7 +1949,13 @@ const mockProperty = [{
   price: '₹1.35 Cr',
   pricePerSqft: '₹10,345/sq.ft',
   location: 'Dwarka Sector 10, Delhi',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  landmarks: [
+    { name: 'Dwarka Sector 10 Metro Station', distance: '0.7 km' },
+    { name: 'Dwarka District Park', distance: '1.5 km' },
+    { name: 'Maharaja Surajmal Institute', distance: '2.1 km' },
+    { name: 'Indira Gandhi International Airport', distance: '10 km' }
+  ],
+  address: 'Flat No. 1205, Royal Residency, Sector 10, Dwarka, Delhi 110075',
   type: 'Apartment',
   area: '1500 sqft',
   carpetArea: '1300 sqft',
@@ -1811,14 +1970,10 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
     { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
-    { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
-    { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://imagecdn.99acres.com/media1/27013/0/540260619M-1755111487117.jpg',
@@ -1842,8 +1997,14 @@ const mockProperty = [{
   title: '2BHK Modern Flat',
   price: '₹48,000/month',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Gachibowli, Hyderabad',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Gachibowli, Hyderabad, Telangana',
+  landmarks: [
+    { name: 'Gachibowli Metro Station', distance: '1.0 km' },
+    { name: 'Microsoft Campus', distance: '1.8 km' },
+    { name: 'Inorbit Mall, Hitech City', distance: '3.2 km' },
+    { name: 'Gachibowli Stadium', distance: '2.5 km' }
+  ],
+  address: 'Flat No. 502, Palm Grove Residency, Near Hitech City Road, Gachibowli, Hyderabad, Telangana 500032',
   type: 'Apartment',
   area: '1000 sqft',
   carpetArea: '800 sqft',
@@ -1858,14 +2019,9 @@ const mockProperty = [{
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Water Supply', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Parking', icon: <FaParking className="text-gray-600" /> },
-    { name: 'Swimming Pool', icon: <FaSwimmingPool className="text-gray-600" /> },
-    { name: 'Gym', icon: <FaDumbbell className="text-gray-600" /> },
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
-    { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
-    { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
-    { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
     'https://dynamic.realestateindia.com/prop_images/1716752/880923_1.jpg',
@@ -1891,8 +2047,14 @@ const mockProperty = [{
   title: '4BHK Premium Villa',
   price: '₹3.2 Cr',
   pricePerSqft: '₹10,345/sq.ft',
-  location: 'Whitefield, Bengaluru',
-  address: '1202, Tower B, Oberoi Esquire, Andheri West, Mumbai, Maharashtra 400053',
+  location: 'Whitefield, Bengaluru, Karnataka',
+  landmarks: [
+    { name: 'ITPL (International Tech Park)', distance: '2.3 km' },
+    { name: 'Forum Neighbourhood Mall', distance: '3.7 km' },
+    { name: 'Vydehi Hospital', distance: '3.9 km' },
+    { name: 'Hope Farm Junction Metro Station', distance: '3.2 km' }
+  ],
+  address: 'Villa No. 15, Palm Grove Villas, Varthur Road, Whitefield, Bengaluru, Karnataka 560066',
   type: 'Villa',
   area: '2600 sqft',
   carpetArea: '2400 sqft',
@@ -1943,6 +2105,8 @@ export default function PropertyDetails() {
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [similarList, setSimilarList] = useState([]);
+
 
   // In a real app, fetch property data based on ID
   // useEffect(() => {
@@ -1968,6 +2132,20 @@ export default function PropertyDetails() {
   setLoading(false);
 }, [id]);
 
+
+
+useEffect(() => {
+  if (!property) return;
+
+  const filtered = mockProperty.filter(
+    (p) =>
+      p.id !== property.id &&
+      p.type === property.type &&
+      p.location.split(',')[1]?.trim() === property.location.split(',')[1]?.trim()
+  );
+
+  setSimilarList(filtered.slice(0, 3)); // max 3 cards
+}, [property]);
 
 
   // const nextImage = () => {
@@ -2240,7 +2418,7 @@ const prevImage = () => {
                 {/* In a real app, you would use Google Maps or similar */}
               </div>
               
-              <div className="mt-4 text-sm text-gray-500">
+              {/* <div className="mt-4 text-sm text-gray-500">
                 <p>Landmarks:</p>
                 <ul className="list-disc list-inside mt-2">
                   <li>Andheri Railway Station - 1.2 km</li>
@@ -2248,11 +2426,26 @@ const prevImage = () => {
                   <li>Juhu Beach - 3.8 km</li>
                   <li>Mumbai Airport - 6.2 km</li>
                 </ul>
-              </div>
+              </div> */}
+
+            <div className="mt-4 text-sm text-gray-500">
+              <p>Landmarks:</p>
+              <ul className="list-disc list-inside mt-2">
+                  {property.landmarks?.map((landmark, index) => (
+                  <li key={index}>
+                  {landmark.name} - {landmark.distance}
+                  </li>
+                  ))}
+              </ul>
+            </div>
+
+            {!property.landmarks?.length && (
+            <p className="text-gray-400">Nearby landmarks not available</p>
+           )}
             </div>
             
             {/* Similar Properties */}
-            <div className="mb-8">
+            {/* <div className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Similar Properties</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -2290,7 +2483,68 @@ const prevImage = () => {
                   </div>
                 ))}
               </div>
+            </div> */}
+
+           <div className="mb-8">
+  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+    Similar Properties
+  </h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {similarList.length > 0 ? (
+      similarList.map((similar) => (
+        <div
+          key={similar.id}
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+        >
+          <Link to={`/property/${similar.id}`}>
+            {/* IMAGE */}
+            <div className="relative">
+              <img
+                src={similar.images?.[0]}
+                alt={similar.title}
+                className="w-full h-48 object-cover"
+              />
             </div>
+
+            {/* CONTENT */}
+            <div className="p-4">
+              {/* TITLE */}
+              <h3 className="text-base font-semibold text-blue-600 mb-1">
+                {similar.title}
+              </h3>
+
+              {/* LOCATION */}
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mb-2">
+                <FiMapPin className="mr-1" size={12} />
+                <span>{similar.location}</span>
+              </p>
+
+              {/* PRICE + BEDS/BATHS */}
+              <div className="flex justify-between items-center">
+                {/* PRICE – SAME SIZE AS TITLE */}
+                <span className="text-base font-semibold text-primary">
+                  {similar.price}
+                </span>
+
+                <div className="flex items-center text-sm text-gray-500">
+                  <FaBed className="mr-1" />
+                  <span className="mr-3">{similar.beds ?? 2}</span>
+                  <FaBath className="mr-1" />
+                  <span>{similar.baths ?? 2}</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))
+    ) : (
+      <p className="text-gray-500">No similar properties found</p>
+    )}
+  </div>
+</div>
+
+
           </div>
           
           {/* Sidebar */}

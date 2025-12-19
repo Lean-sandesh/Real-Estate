@@ -81,6 +81,12 @@ export default function PropertyCard({ property }) {
         <div className="absolute top-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded-md z-20 pointer-events-none">
           👁 {property.views ?? 0}
         </div>
+        {/* :white_check_mark: Image Counter */}
+        {imgArray.length > 1 && (
+          <div className="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded-md z-20 pointer-events-none">
+            {current + 1}/{imgArray.length}
+          </div>
+        )}
 
         <Link to={`/property/${property.id}`} className="block h-full">
           <img
