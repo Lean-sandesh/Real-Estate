@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMapPin, FiShare2, FiHeart, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { FaBed, FaBath, FaRulerCombined, FaParking, FaSwimmingPool, FaWifi, FaTv, FaSnowflake, FaDumbbell, FaUtensils, FaCoffee, FaWineGlassAlt, FaPhoneAlt, FaEnvelope, FaWhatsapp, FaArrowRight } from 'react-icons/fa';
-import { IoIosArrowForward } from 'react-icons/io';
-// import similarProperties from '../data/similarProperties.json';
+import { FaBed, FaBath, FaRulerCombined, FaParking, FaSwimmingPool, FaWifi, FaTv, FaSnowflake, FaDumbbell, FaUtensils, FaCoffee, FaWineGlassAlt, FaPhoneAlt, FaEnvelope, FaArrowRight } from 'react-icons/fa';
+//import { IoIosArrowForward } from 'react-icons/io';
+import { FaWhatsapp, FaFacebookF, FaLinkedinIn } from "react-icons/fa6";
+import { FaXTwitter, FaTelegram } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
+import { useRef } from "react";
+
 
 // Mock data - in a real app, this would come from an API
 const mockProperty = [{
@@ -42,13 +46,12 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/007-2.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/022-1.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/024-1.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/026.jpg', 
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/019-1.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/MG_0080-1.jpg'
+  images: [{ url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/007-2.jpg', label: "Hall" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/022-1.jpg', label: "Bedroom" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/024-1.jpg', label: "Bedroom" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/026.jpg', label: "Bedroom" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/019-1.jpg', label: "Kitchen" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/MG_0080-1.jpg', label: "Bathroom" },
   ],
   agent: {
     name: 'Rahul Sharma',
@@ -95,10 +98,9 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiC3tThHp5Jp39N9AwLG-2CraME1zRfU7t06zKEPvyxUgOgw8Ug453NfojBR-1ap46MF3_UKqwP58cirRWYj_qzyOeCaU7FYBod8ZLE9PK9P-0ELRTucUvtPL0RhESmjBjrEad2XmTdHZOFuqiltFqf1TYI92KL32JNKoNPyf1Vr8cqk7aN2Ve8HEPR/s1600/IMG-20221205-WA0006.jpg',
-    'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiRsoshidBczBNQrQQU_WdzcSlbdj4FL_4rZ8WZW0inaB6tsIYnCYNzd_m04ZpZxORRx5vCVfItgupPDU5E-YI_sdZod-KS70OPECocShKj5P9A4v3adxn5fFOLtULjAmNbEumiFNfMMIM7umZJSNiTYdMce2ihU001F7p2EokkFBI5J8dz6x8aZ3sM/s1600/IMG-20221205-WA0014.jpg',
-    'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEifT8nFOW0sugPUvr6-rBDfmtXgZqu3M3kkuVWmXsDI6GIWPcM5ptdm3iB6dpWjHveJYqkoB_pAEZn7WH2sbq8xm3GAIzSA8TGFZnZw4BBnXOhXbYKcgTovtKp06XdNNpKiat4yEGziwgkfPP-nuiff1mIRDDVkYeGC0d5Ag6rV1WgncfkTugrEG9Mh/s1600/IMG-20221205-WA0008.jpg',
+  images: [{ url: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiC3tThHp5Jp39N9AwLG-2CraME1zRfU7t06zKEPvyxUgOgw8Ug453NfojBR-1ap46MF3_UKqwP58cirRWYj_qzyOeCaU7FYBod8ZLE9PK9P-0ELRTucUvtPL0RhESmjBjrEad2XmTdHZOFuqiltFqf1TYI92KL32JNKoNPyf1Vr8cqk7aN2Ve8HEPR/s1600/IMG-20221205-WA0006.jpg', label: "Hall" },
+  { url: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiRsoshidBczBNQrQQU_WdzcSlbdj4FL_4rZ8WZW0inaB6tsIYnCYNzd_m04ZpZxORRx5vCVfItgupPDU5E-YI_sdZod-KS70OPECocShKj5P9A4v3adxn5fFOLtULjAmNbEumiFNfMMIM7umZJSNiTYdMce2ihU001F7p2EokkFBI5J8dz6x8aZ3sM/s1600/IMG-20221205-WA0014.jpg', label: "" },
+  { url: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEifT8nFOW0sugPUvr6-rBDfmtXgZqu3M3kkuVWmXsDI6GIWPcM5ptdm3iB6dpWjHveJYqkoB_pAEZn7WH2sbq8xm3GAIzSA8TGFZnZw4BBnXOhXbYKcgTovtKp06XdNNpKiat4yEGziwgkfPP-nuiff1mIRDDVkYeGC0d5Ag6rV1WgncfkTugrEG9Mh/s1600/IMG-20221205-WA0008.jpg', label: "Balcony" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -148,10 +150,9 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/POOL%20VIEW%20033.jpg',
-    'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/View_3.jpg',
-    'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/View_4.jpg',
+  images: [{ url: 'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/POOL%20VIEW%20033.jpg', label: "Property Image" },
+  { url: 'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/View_3.jpg', label: "Garden" },
+  { url: 'https://villas.kumarinautilus.com/luxury-villas-whitefield-bangalore/1280/View_4.jpg', label: "Garden" },
   ],
   agent: {
     name: 'Priya Patel',
@@ -200,12 +201,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://media.designcafe.com/wp-content/uploads/2021/06/30135419/modern-1bhk-home-living-room-designed-with-comfortable-couch-and-tv-unit.jpg',
-    'https://media.designcafe.com/wp-content/uploads/2021/06/30135412/modern-1bhk-bedroom-design-with-false-ceiling-and-queen-size-bed.jpg',
-    'https://media.designcafe.com/wp-content/uploads/2021/06/30135426/modern-1-bhk-home-straight-kitchen-with-muted-colours-and-clean-lines.jpg',
-    'https://media.designcafe.com/wp-content/uploads/2021/06/30135438/modern-1bhk-house-bathroom-design-with-white-and-grey-tiles-and-marble-flooring.jpg'
-    ],
+  images: [{ url: 'https://media.designcafe.com/wp-content/uploads/2021/06/30135419/modern-1bhk-home-living-room-designed-with-comfortable-couch-and-tv-unit.jpg', label: "Hall" },
+  { url: 'https://media.designcafe.com/wp-content/uploads/2021/06/30135412/modern-1bhk-bedroom-design-with-false-ceiling-and-queen-size-bed.jpg', label: "Bedroom" },
+  { url: 'https://media.designcafe.com/wp-content/uploads/2021/06/30135426/modern-1-bhk-home-straight-kitchen-with-muted-colours-and-clean-lines.jpg', label: "Kitchen" },
+  { url: 'https://media.designcafe.com/wp-content/uploads/2021/06/30135438/modern-1bhk-house-bathroom-design-with-white-and-grey-tiles-and-marble-flooring.jpg', label: "Bathroom" },
+  ],
   agent: {
     name: 'Priya Patel',
     phone: '+91 98765 43211',
@@ -253,12 +253,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://imagecdn.99acres.com/media1/26902/9/538049253M-1755114442118.jpg',
-    'https://imagecdn.99acres.com/media1/26902/9/538049261M-1755114427481.jpg',
-    'https://imagecdn.99acres.com/media1/26902/9/538049265M-1755114624687.jpg',   
-    'https://imagecdn.99acres.com/media1/26902/9/538049267M-1755114914741.jpg' 
-    ],
+  images: [{ url: 'https://imagecdn.99acres.com/media1/26902/9/538049253M-1755114442118.jpg', label: "Hall" },
+  { url: 'https://imagecdn.99acres.com/media1/26902/9/538049261M-1755114427481.jpg', label: "Bedroom" },
+  { url: 'https://imagecdn.99acres.com/media1/26902/9/538049265M-1755114624687.jpg', label: "Kitchen" },
+  { url: 'https://imagecdn.99acres.com/media1/26902/9/538049267M-1755114914741.jpg', label: "Bathroom" },
+  ],
   agent: {
     name: 'Priya Patel',
     phone: '+91 98765 43211',
@@ -303,14 +302,13 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_1.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_2.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_3.jpg',   
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_4.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_7.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/1392069/775829_6.jpg' 
-    ],
+  images: [{ url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_1.jpg', label: "Property Image" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_2.jpg', label: "Hall" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_3.jpg', label: "Bedroom" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_4.jpg', label: "Bedroom" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_7.jpg', label: "Kitchen" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/1392069/775829_6.jpg', label: "Bathroom" },
+  ],
   agent: {
     name: 'Priya Patel',
     phone: '+91 98765 43211',
@@ -344,7 +342,7 @@ const mockProperty = [{
   facing: 'North',
   totalFloors: 0,
   floorNo: 0,
- description: "This exclusive luxury penthouse is located in the upscale locality of Bandra West, Mumbai, offering breathtaking panoramic views of the city skyline. Spread across a spacious 3200 sq.ft built-up area with 3000 sq.ft carpet space, the penthouse is thoughtfully designed to deliver a premium living experience. It features a grand living and dining area with large windows, a modern modular kitchen with high-end fittings, and expansive bedrooms with attached bathrooms. The north-facing layout ensures ample natural light and ventilation throughout the day. This ready-to-move penthouse comes equipped with world-class amenities including lift, power backup, swimming pool, gym, parking, and 24x7 water supply. Located close to premium restaurants, cafes, shopping hubs, and entertainment zones, this penthouse is ideal for those seeking luxury, privacy, and an elite lifestyle in the heart of Mumbai.",
+  description: "This exclusive luxury penthouse is located in the upscale locality of Bandra West, Mumbai, offering breathtaking panoramic views of the city skyline. Spread across a spacious 3200 sq.ft built-up area with 3000 sq.ft carpet space, the penthouse is thoughtfully designed to deliver a premium living experience. It features a grand living and dining area with large windows, a modern modular kitchen with high-end fittings, and expansive bedrooms with attached bathrooms. The north-facing layout ensures ample natural light and ventilation throughout the day. This ready-to-move penthouse comes equipped with world-class amenities including lift, power backup, swimming pool, gym, parking, and 24x7 water supply. Located close to premium restaurants, cafes, shopping hubs, and entertainment zones, this penthouse is ideal for those seeking luxury, privacy, and an elite lifestyle in the heart of Mumbai.",
   amenities: [
     { name: 'Lift', icon: <FaArrowRight className="text-gray-600" /> },
     { name: 'Power Backup', icon: <FaArrowRight className="text-gray-600" /> },
@@ -359,11 +357,10 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.guptasen.com/wp-content/uploads/2021/02/5-BHK-Ekta-Empress-Khar-penthouse.jpg',
-    'https://www.guptasen.com/wp-content/uploads/2021/02/furnished-penthouse-sale-bandra-Khar.jpg',
-    'https://www.guptasen.com/wp-content/uploads/2021/02/duplex-penthouse-furnished-bandra-west.jpg',
-    'https://www.guptasen.com/wp-content/uploads/2021/02/penthouse-duplex-homes-bandra-Mumbai.jpg'
+  images: [{ url: 'https://www.guptasen.com/wp-content/uploads/2021/02/5-BHK-Ekta-Empress-Khar-penthouse.jpg', label: "Hall" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2021/02/furnished-penthouse-sale-bandra-Khar.jpg', label: "" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2021/02/duplex-penthouse-furnished-bandra-west.jpg', label: "" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2021/02/penthouse-duplex-homes-bandra-Mumbai.jpg', label: "Balcony" },
   ],
   agent: {
     name: 'Rahul Sharma',
@@ -408,11 +405,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/uzuvzhv_1763028449_672272241_med.jpg',
-    'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/vainlq5_1763028603_672274119_med.jpg',
-    'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/wofajmv_1763028606_672274163_med.jpg'
-    ],
+  images: [{ url: 'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/uzuvzhv_1763028449_672272241_med.jpg', label: "Property Image" },
+  { url: 'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/vainlq5_1763028603_672274119_med.jpg', label: "Bedroom" },
+  { url: 'https://newprojects.99acres.com/projects/sriven_properties/sriven_daksha_elite/images/wofajmv_1763028606_672274163_med.jpg', label: "Hall" },
+  ],
   agent: {
     name: 'Priya Patel',
     phone: '+91 98765 43211',
@@ -457,10 +453,9 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://cf.bstatic.com/xdata/images/hotel/max300/785650897.jpg?k=85cec98266e72db4fae55e8cd41f0013d55c6b8b6ea66b1471540b93b123e5f7&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max300/785650905.jpg?k=aabfe9c32b3297b54887e20022d833e6266f0e0aaf9d489775bb9646bd69e1c9&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max300/785650891.jpg?k=b3a176ada6bcdf4097ae44a6ac7107c91dd759dee708ecf4d06ee4c4b855a337&o='
+  images: [{ url: 'https://cf.bstatic.com/xdata/images/hotel/max300/785650897.jpg?k=85cec98266e72db4fae55e8cd41f0013d55c6b8b6ea66b1471540b93b123e5f7&o=', label: "Property Image" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max300/785650905.jpg?k=aabfe9c32b3297b54887e20022d833e6266f0e0aaf9d489775bb9646bd69e1c9&o=', label: "Hall" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max300/785650891.jpg?k=b3a176ada6bcdf4097ae44a6ac7107c91dd759dee708ecf4d06ee4c4b855a337&o=', label: "Bedroom" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -507,11 +502,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_5.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_4.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_6.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_7.jpg'
+  images: [{ url: 'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_5.jpg', label: "Hall" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_4.jpg', label: "" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_6.jpg', label: "Bedroom" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/3187878/1403647_7.jpg', label: "" },
   ],
   agent: {
     name: 'Neha Soni',
@@ -560,12 +554,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/10-2.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/19-1.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/5-2.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/16-1.jpg',
-    'https://www.uniqueshanti.com/wp-content/uploads/2018/11/3-2.jpg'
+  images: [{ url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/10-2.jpg', label: "Property Image" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/19-1.jpg', label: "Hall" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/5-2.jpg', label: "Bedroom" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/16-1.jpg', label: "Kitchen" },
+  { url: 'https://www.uniqueshanti.com/wp-content/uploads/2018/11/3-2.jpg', label: "Bathroom" },
   ],
   agent: {
     name: 'Rahul Sharma',
@@ -615,10 +608,9 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.guptasen.com/wp-content/uploads/2023/06/lobby-oberoi-sky-heights-lokhandwala-andheri-west.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/06/large-living-room-of-4-BHK-apartment-Oberoi-sky-heights.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/06/bedroom-of-4-BHK-Oberoi-Sky-heights-lokhandwala-back-road-mumbai.webp'
+  images: [{ url: 'https://www.guptasen.com/wp-content/uploads/2023/06/lobby-oberoi-sky-heights-lokhandwala-andheri-west.webp', label: "Property Image" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/06/large-living-room-of-4-BHK-apartment-Oberoi-sky-heights.webp', label: "Hall" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/06/bedroom-of-4-BHK-Oberoi-Sky-heights-lokhandwala-back-road-mumbai.webp', label: "Bedroom" },
   ],
   agent: {
     name: 'Neha Soni',
@@ -666,12 +658,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://img.squareyards.com/secondaryPortal/IN_638927548243524144-060925112704274.jpeg?aio=w-400;h-250;crop;',
-    'https://img.squareyards.com/secondaryPortal/IN_638927548246167195-060925112704274.jpeg?aio=w-400;h-250;crop;',
-    'https://img.squareyards.com/secondaryPortal/IN_638927548246536780-060925112704274.jpeg?aio=w-400;h-250;crop;',
-    'https://img.squareyards.com/secondaryPortal/IN_638927548247901983-060925112704274.jpeg?aio=w-400;h-250;crop;',
-    'https://img.squareyards.com/secondaryPortal/IN_638927548246897695-060925112704274.jpeg?aio=w-400;h-250;crop;'
+  images: [{ url: 'https://img.squareyards.com/secondaryPortal/IN_638927548243524144-060925112704274.jpeg?aio=w-400;h-250;crop;', label: "Hall" },
+  { url: 'https://img.squareyards.com/secondaryPortal/IN_638927548246167195-060925112704274.jpeg?aio=w-400;h-250;crop;', label: "Bedroom" },
+  { url: 'https://img.squareyards.com/secondaryPortal/IN_638927548246536780-060925112704274.jpeg?aio=w-400;h-250;crop;', label: "Bedroom" },
+  { url: 'https://img.squareyards.com/secondaryPortal/IN_638927548247901983-060925112704274.jpeg?aio=w-400;h-250;crop;', label: "Kitchen" },
+  { url: 'https://img.squareyards.com/secondaryPortal/IN_638927548246897695-060925112704274.jpeg?aio=w-400;h-250;crop;', label: "Bathroom" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -718,12 +709,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-11.webp',
-    'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-01.webp',
-    'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-07.webp',
-    'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-02.webp',
-    'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-03.webp'
+  images: [{ url: 'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-11.webp', label: "Hall" },
+  { url: 'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-01.webp', label: "Bedroom" },
+  { url: 'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-07.webp', label: "Bedroom" },
+  { url: 'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-02.webp', label: "Bedroom" },
+  { url: 'https://malvigajjar.com/wp-content/uploads/2024/05/4-BHK-Luxury-Apartment-03.webp', label: "Bedroom" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -772,11 +762,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dynamic.realestateindia.com/prop_images/3760972/1354563_2.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/3760972/1354563_5.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/3760972/1354563_8.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/3760972/1354563_7.jpeg'
+  images: [{ url: 'https://dynamic.realestateindia.com/prop_images/3760972/1354563_2.jpeg', label: "Hall" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3760972/1354563_5.jpeg', label: "Bedroom" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3760972/1354563_8.jpeg', label: "Kitchen" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3760972/1354563_7.jpeg', label: "Bathroom" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -826,13 +815,12 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.guptasen.com/wp-content/uploads/2023/02/supreme-villagio-corner-villa-3-BHK.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/02/4-BHK-supreme-villagio-Pune.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/02/best-budget-villas-for-sale-pune.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/02/best-villa-projects-near-pune.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/02/supreme-villagio-somatane-pune.webp',
-    'https://www.guptasen.com/wp-content/uploads/2023/02/best-villa-projects-somatane-pune.webp'
+  images: [{ url: 'https://www.guptasen.com/wp-content/uploads/2023/02/supreme-villagio-corner-villa-3-BHK.webp', label: "Property Image" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/02/4-BHK-supreme-villagio-Pune.webp', label: "Hall" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/02/best-budget-villas-for-sale-pune.webp', label: "Bedroom" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/02/best-villa-projects-near-pune.webp', label: "Dining Table" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/02/supreme-villagio-somatane-pune.webp', label: "Balcony" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2023/02/best-villa-projects-somatane-pune.webp', label: "Bedroom  " },
   ],
   agent: {
     name: 'Neha Soni',
@@ -880,11 +868,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dynamic.realestateindia.com/prop_images/3269472/1220018_1.jpg',
-    'https://dynamic.realestateindia.com/prop_images/3269472/1220018_2.jpg',
-    'https://dynamic.realestateindia.com/prop_images/3269472/1220018_7.jpg',
-    'https://dynamic.realestateindia.com/prop_images/3269472/1220018_4.jpg'
+  images: [{ url: 'https://dynamic.realestateindia.com/prop_images/3269472/1220018_1.jpg', label: "Hall" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3269472/1220018_2.jpg', label: "Bedroom" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3269472/1220018_7.jpg', label: "Bedroom" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/3269472/1220018_4.jpg', label: "Kitchen" },
   ],
   agent: {
     name: 'Neha Soni',
@@ -933,11 +920,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_1.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_2.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_3.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_5.jpg'
+  images: [{ url: 'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_1.jpg', label: "Property Image" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_2.jpg', label: "Garden" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_3.jpg', label: "Bedroom" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2911909/1141895_5.jpg', label: "Bedroom" },
   ],
   agent: {
     name: 'Rahul Sharma',
@@ -987,11 +973,10 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/06-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-900x546.jpg',
-    'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/12-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-1024x769.jpg',
-    'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/25-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-636x847.jpg',
-    'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/14-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-688x517.jpg'
+  images: [{ url: 'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/06-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-900x546.jpg', label: "Property Image" },
+  { url: 'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/12-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-1024x769.jpg', label: "" },
+  { url: 'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/25-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-636x847.jpg', label: "" },
+  { url: 'https://www.thepinnaclelist.com/wp-content/uploads/2020/06/14-Lines-of-Light-Luxury-Residence-Faber-Terrace-Singapore-688x517.jpg', label: "Kitchen" },
   ],
   agent: {
     name: 'Karan Desai',
@@ -1038,11 +1023,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/ff67bdfa-5bae-4590-8cc7-f86d61c176a0.jpeg?im_w=1200',
-    'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/25280c8d-9d64-464c-aead-fb0692e9e416.jpeg?im_w=1440',
-    'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/dae8151b-811f-4960-bc53-33a9b4cf66a9.jpeg?im_w=1440',
-    'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/9f151c3b-79d3-4b03-99d4-338d3e926b1c.jpeg?im_w=1440'
+  images: [{ url: 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/ff67bdfa-5bae-4590-8cc7-f86d61c176a0.jpeg?im_w=1200', label: "Hall" },
+  { url: 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/25280c8d-9d64-464c-aead-fb0692e9e416.jpeg?im_w=1440', label: "Bedroom" },
+  { url: 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/dae8151b-811f-4960-bc53-33a9b4cf66a9.jpeg?im_w=1440', label: "Kitchen" },
+  { url: 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwNDEwNjk0MjExMjEzMjg3OA%3D%3D/original/9f151c3b-79d3-4b03-99d4-338d3e926b1c.jpeg?im_w=1440', label: "Bathroom" },
   ],
   agent: {
     name: 'Aishwarya Menon',
@@ -1091,10 +1075,9 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://im.proptiger.com/1/3109067/6/dwarka-mor-affordable-homes-elevation-117971152.jpeg?width=1336&height=768',
-    'https://im.proptiger.com/1/3109067/81/dwarka-mor-affordable-homes-kitchen-117971632.jpeg?width=1336&height=768',
-    'https://im.proptiger.com/1/3109067/81/dwarka-mor-affordable-homes-kitchen-117971631.jpeg?width=1336&height=768'
+  images: [{ url: 'https://im.proptiger.com/1/3109067/6/dwarka-mor-affordable-homes-elevation-117971152.jpeg?width=1336&height=768', label: "Property Image" },
+  { url: 'https://im.proptiger.com/1/3109067/81/dwarka-mor-affordable-homes-kitchen-117971632.jpeg?width=1336&height=768', label: "Hall" },
+  { url: 'https://im.proptiger.com/1/3109067/81/dwarka-mor-affordable-homes-kitchen-117971631.jpeg?width=1336&height=768', label: "Kitchen" },
   ],
   agent: {
     name: 'Amit Singh',
@@ -1141,12 +1124,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_153651.jpg',
-    'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145441.jpg',
-    'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_151624.jpg',
-    'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145853.jpg',
-    'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145749.jpg'
+  images: [{ url: 'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_153651.jpg', label: "Property Image" },
+  { url: 'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145441.jpg', label: "Hall" },
+  { url: 'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_151624.jpg', label: "Kitchen" },
+  { url: 'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145853.jpg', label: "Balcony" },
+  { url: 'https://s3-ap-southeast-1.amazonaws.com/apnacomplexdocs/user_content/xerbia-hinjewadi-phase-2/classifieds/b9f667b77f4de21d58da83b45665ff44___IMG_20190712_145749.jpg', label: "Bathroom" },
   ],
   agent: {
     name: 'Neha Soni',
@@ -1196,12 +1178,11 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://code-estate.com/wp-content/uploads/2025/03/penthouse-with-open-terrace-khar-west.jpg',
-    'https://code-estate.com/wp-content/uploads/2025/03/spacious-4bhk-penthouse-pali-hill.jpg',
-    'https://code-estate.com/wp-content/uploads/2025/03/cross-ventilated-penthouse-with-natural-light.jpg',
-    'https://code-estate.com/wp-content/uploads/2025/03/sea-view-penthouse-mumbai-dr-ambedkar-road.jpg',
-    'https://code-estate.com/wp-content/uploads/2025/03/premium-2300sqft-penthouse-sale-mumbai.jpg'
+  images: [{ url: 'https://code-estate.com/wp-content/uploads/2025/03/penthouse-with-open-terrace-khar-west.jpg', label: "Hall" },
+  { url: 'https://code-estate.com/wp-content/uploads/2025/03/spacious-4bhk-penthouse-pali-hill.jpg', label: "Dining Table" },
+  { url: 'https://code-estate.com/wp-content/uploads/2025/03/cross-ventilated-penthouse-with-natural-light.jpg', label: "Bedrooom" },
+  { url: 'https://code-estate.com/wp-content/uploads/2025/03/sea-view-penthouse-mumbai-dr-ambedkar-road.jpg', label: "" },
+  { url: 'https://code-estate.com/wp-content/uploads/2025/03/premium-2300sqft-penthouse-sale-mumbai.jpg', label: "" },
   ],
   agent: {
     name: 'Rahul Sharma',
@@ -1249,11 +1230,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/4a/skyla-serviced-apartments.jpg?w=1600&h=-1&s=1',
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/47/siting-lounge.jpg?w=2000&h=-1&s=1',
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/99/0e/50/skyla-gachibowli.jpg?w=2000&h=-1&s=1',
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/48/outside-view.jpg?w=1600&h=-1&s=1'
+  images: [{ url: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/4a/skyla-serviced-apartments.jpg?w=1600&h=-1&s=1', label: "Property Image" },
+  { url: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/47/siting-lounge.jpg?w=2000&h=-1&s=1', label: "Hall" },
+  { url: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/99/0e/50/skyla-gachibowli.jpg?w=2000&h=-1&s=1', label: "Bedroom" },
+  { url: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/2c/48/outside-view.jpg?w=1600&h=-1&s=1', label: "Bedroom" },
   ],
   agent: {
     name: 'Ananya Reddy',
@@ -1301,12 +1281,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0000.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0006.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0001.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0002.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0004.jpg'
+  images: [{ url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0000.jpg', label: "Hall" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0006.jpg', label: "Hall" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0001.jpg', label: "Bedroom" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0002.jpg', label: "Kitchen" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/11/IMG-20141115-WA0004.jpg', label: "Bathroom" },
   ],
   agent: {
     name: 'Aditya Khanna',
@@ -1350,12 +1329,11 @@ const mockProperty = [{
     { name: 'WiFi', icon: <FaWifi className="text-gray-600" /> },
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
   ],
-  images: [
-    'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_2.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_3.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_4.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_6.jpg',
-    'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_5.jpg'
+  images: [{ url: 'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_2.jpg', label: "Property Image" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_3.jpg', label: "Hall" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_4.jpg', label: "Bedroom" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_6.jpg', label: "Kitchen" },
+  { url: 'https://dyimg2.realestateindia.com/prop_images/2830198/1114388_5.jpg', label: "Bathroom" },
   ],
   agent: {
     name: 'Aishwarya Menon',
@@ -1405,10 +1383,9 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.decorpot.com/images/blogimage1681441444understanding-the-space-for-4-bhk-home.jpg',
-    'https://www.decorpot.com/images/blogimage2021248753bedroom-design-for-4-bhk-home.jpg',
-    'https://www.decorpot.com/images/blogimage1589277315kitchen-for-4-bhk-home.jpg'
+  images: [{ url: 'https://www.decorpot.com/images/blogimage1681441444understanding-the-space-for-4-bhk-home.jpg', label: "Hall" },
+  { url: 'https://www.decorpot.com/images/blogimage2021248753bedroom-design-for-4-bhk-home.jpg', label: "Bedroom" },
+  { url: 'https://www.decorpot.com/images/blogimage1589277315kitchen-for-4-bhk-home.jpg', label: "Kitchen" },
   ],
   agent: {
     name: 'Aishwarya Menon',
@@ -1457,12 +1434,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595726.jpg?k=3b42c98d7911b80934b0ca30826e6d0c1aee228dd94020d7cd996d61d0088a62&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595777.jpg?k=52b01bcf3b2154e86359dcc100c993a065eadc3c3908be47d4607a96f0677282&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595780.jpg?k=0550a31fb032e4132647ee2840711ef06ed31cfcbc825fd223ef240cb39e94b7&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595786.jpg?k=1de5ca25632c72318ae5507e5dc989ca32ad4b0b2b7bd232bb6ad41b416bdda2&o=',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595766.jpg?k=fc513312d0608f865731611b5cbd6fa30fe7a14c0fcb5cfc54c11ed67eecbef3&o='
+  images: [{ url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595726.jpg?k=3b42c98d7911b80934b0ca30826e6d0c1aee228dd94020d7cd996d61d0088a62&o=', label: "Hall" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595777.jpg?k=52b01bcf3b2154e86359dcc100c993a065eadc3c3908be47d4607a96f0677282&o=', label: "Bedroom" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595780.jpg?k=0550a31fb032e4132647ee2840711ef06ed31cfcbc825fd223ef240cb39e94b7&o=', label: "Bedroom" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595786.jpg?k=1de5ca25632c72318ae5507e5dc989ca32ad4b0b2b7bd232bb6ad41b416bdda2&o=', label: "Kitchen" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/668595766.jpg?k=fc513312d0608f865731611b5cbd6fa30fe7a14c0fcb5cfc54c11ed67eecbef3&o=', label: "Bathroom" },
   ],
   agent: {
     name: 'Amit Singh',
@@ -1509,11 +1485,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://gladwinsrealty.com/app/web/upload/medium/169_7592478d631874dbd2e2dfddbf88498a.jpg',
-    'https://gladwinsrealty.com/app/web/upload/medium/169_3160c6e893938c47a0c014f8fae4d860.jpg',
-    'https://gladwinsrealty.com/app/web/upload/medium/169_bbe34b0a2f448a75c3ccd34dfb8045b7.jpg',
-    'https://gladwinsrealty.com/app/web/upload/medium/169_db1993809ffff68551d5e833a40719dc.jpg'
+  images: [{ url: 'https://gladwinsrealty.com/app/web/upload/medium/169_7592478d631874dbd2e2dfddbf88498a.jpg', label: "Hall" },
+  { url: 'https://gladwinsrealty.com/app/web/upload/medium/169_3160c6e893938c47a0c014f8fae4d860.jpg', label: "Bedroom" },
+  { url: 'https://gladwinsrealty.com/app/web/upload/medium/169_bbe34b0a2f448a75c3ccd34dfb8045b7.jpg', label: "Bedroom" },
+  { url: 'https://gladwinsrealty.com/app/web/upload/medium/169_db1993809ffff68551d5e833a40719dc.jpg', label: "Kitchen" },
   ],
   agent: {
     name: 'Neha Soni',
@@ -1561,12 +1536,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_141740__Building%20View.jpg',
-    'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135912__Living%20Room.jpg',
-    'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135527__Bedroom%201.jpg',
-    'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_140434__Bedroom%203.jpg',
-    'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135715__Kitchen.jpg'
+  images: [{ url: 'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_141740__Building%20View.jpg', label: "Property Image" },
+  { url: 'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135912__Living%20Room.jpg', label: "Hall" },
+  { url: 'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135527__Bedroom%201.jpg', label: "Bedroom" },
+  { url: 'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_140434__Bedroom%203.jpg', label: "Bedroom" },
+  { url: 'http://d131n82dij7gxv.cloudfront.net/upload/uploadedfiles/65ae2e63-6395-468f-b11d-bebed0b39328_IMG_20150609_135715__Kitchen.jpg', label: "Kitchen" },
   ],
   agent: {
     name: 'Ananya Reddy',
@@ -1612,10 +1586,9 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3161-n.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3164-copie-n.jpg',
-    'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3163-copie-n.jpg'
+  images: [{ url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3161-n.jpg', label: "Hall" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3164-copie-n.jpg', label: "Kitchen" },
+  { url: 'https://www.expatpropertiesmumbai.com/wp-content/uploads/2014/03/SAM_3163-copie-n.jpg', label: "Bedroom" }
   ],
   agent: {
     name: 'Aditya Khanna',
@@ -1665,11 +1638,10 @@ const mockProperty = [{
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
-  images: [
-    'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-1.jpg',
-    'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-7.jpeg',
-    'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-9.jpeg',
-    'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-10.jpeg'
+  images: [{ url: 'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-1.jpg', label: "Property Image" },
+  { url: 'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-7.jpeg', label: "Hall" },
+  { url: 'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-9.jpeg', label: "Bedroom" },
+  { url: 'https://cbvalueaddrealty.in/wp-content/uploads/2023/11/3-BHK-Apartment-for-Sale-in-Brigade-Omega-10.jpeg', label: "Bathroom" }
   ],
   agent: {
     name: 'Aishwarya Menon',
@@ -1717,12 +1689,11 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-25-1170x785.jpeg',
-    'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-7.jpeg',
-    'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-24.jpeg',
-    'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-17.jpeg',
-    'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-2.jpeg'
+  images: [{ url: 'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-25-1170x785.jpeg', label: "Property Image" },
+  { url: 'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-7.jpeg', label: "Hall" },
+  { url: 'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-24.jpeg', label: "Bedroom" },
+  { url: 'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-17.jpeg', label: "Bedroom" },
+  { url: 'https://www.key2home.in/wp-content/uploads/2020/09/2-bhk-fully-furnished-golden-trellis-balewadi-baner-pune-2.jpeg', label: "Kitchen" },
   ],
   agent: {
     name: 'Vikram Bhosale',
@@ -1771,11 +1742,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://www.guptasen.com/wp-content/uploads/2025/03/bright-airy-living-room-vascon-orchids-linking-road-santacruz-west.webp',
-    'https://www.guptasen.com/wp-content/uploads/2025/03/3-BHK-vascon-orchids-linking-road-main-master-bedroom.webp',
-    'https://www.guptasen.com/wp-content/uploads/2025/03/vascon-orchids-linking-road-master-bedroom-of-2-BHK.webp',
-    'https://www.guptasen.com/wp-content/uploads/2025/03/kitchen-at-2-BHK-vascon-orchids-linking-road.webp'
+  images: [{ url: 'https://www.guptasen.com/wp-content/uploads/2025/03/bright-airy-living-room-vascon-orchids-linking-road-santacruz-west.webp', label: "Hall" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2025/03/3-BHK-vascon-orchids-linking-road-main-master-bedroom.webp', label: "Bedroom" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2025/03/vascon-orchids-linking-road-master-bedroom-of-2-BHK.webp', label: "Bedroom" },
+  { url: 'https://www.guptasen.com/wp-content/uploads/2025/03/kitchen-at-2-BHK-vascon-orchids-linking-road.webp', label: "Kitchen" }
   ],
   agent: {
     name: 'Amit Singh',
@@ -1823,11 +1793,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://0009.in/wp-content/uploads/classified-listing/2021/12/u.webp',
-    'https://0009.in/wp-content/uploads/classified-listing/2021/12/download-4.jpg',
-    'https://0009.in/wp-content/uploads/classified-listing/2021/12/images.jpg',
-    'https://0009.in/wp-content/uploads/classified-listing/2021/12/57981737_6_PropertyImage630-0185875372603_180_240.jpg'
+  images: [{ url: 'https://0009.in/wp-content/uploads/classified-listing/2021/12/u.webp', label: "Property Image" },
+  { url: 'https://0009.in/wp-content/uploads/classified-listing/2021/12/download-4.jpg', label: "Hall" },
+  { url: 'https://0009.in/wp-content/uploads/classified-listing/2021/12/images.jpg', label: "Bedroom" },
+  { url: 'https://0009.in/wp-content/uploads/classified-listing/2021/12/57981737_6_PropertyImage630-0185875372603_180_240.jpg', label: "Balcony" }
   ],
   agent: {
     name: 'Aditya Khanna',
@@ -1875,11 +1844,10 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://is1-2.housingcdn.com/4f2250e8/4560dacc3d4e5e99cd138672b8718015/v5/medium.jpg',
-    'https://imagecdn.99acres.com/media1/29751/1/595021271M-1755981280499.webp',
-    'https://img.squareyards.com/secondaryPortal/638431872899609934-1002240641294129.jpg',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/537255732.jpg?k=c0b110ab2a7669a6c59029345a3d19713480f4cba6ccc00dd9d5d4898616a67e&o=&hp=1'
+  images: [{ url: 'https://is1-2.housingcdn.com/4f2250e8/4560dacc3d4e5e99cd138672b8718015/v5/medium.jpg', label: "Property Image" },
+  { url: 'https://imagecdn.99acres.com/media1/29751/1/595021271M-1755981280499.webp', label: "Hall" },
+  { url: 'https://img.squareyards.com/secondaryPortal/638431872899609934-1002240641294129.jpg', label: "Bedroom" },
+  { url: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/537255732.jpg?k=c0b110ab2a7669a6c59029345a3d19713480f4cba6ccc00dd9d5d4898616a67e&o=&hp=1', label: "Bedroom" },
   ],
   agent: {
     name: 'Karan Desai',
@@ -1926,10 +1894,9 @@ const mockProperty = [{
     { name: 'Cafeteria', icon: <FaCoffee className="text-gray-600" /> },
     { name: 'Restaurant', icon: <FaUtensils className="text-gray-600" /> },
   ],
-  images: [
-    'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/1-1661189264-VuCV5.jpg',
-    'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/6-1661189292-GtoNb.jpg',
-    'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/8-1661189307-2srhu.jpg'
+  images: [{ url: 'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/1-1661189264-VuCV5.jpg', label: "Hall" },
+  { url: 'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/6-1661189292-GtoNb.jpg', label: "Kitchen" },
+  { url: 'https://images.livspace-cdn.com/w:3840/plain/https://d3gq2merok8n5r.cloudfront.net/abhinav/false-ceiling-homes-pilot-1660820004-eRVFP/hometour-1660820029-cuOHh/ht-in-lr-0032-1661189252-OByZv/8-1661189307-2srhu.jpg', label: "Bedroom" }
   ],
   agent: {
     name: 'Aditya Khanna',
@@ -1975,10 +1942,9 @@ const mockProperty = [{
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
   ],
-  images: [
-    'https://imagecdn.99acres.com/media1/27013/0/540260619M-1755111487117.jpg',
-    'https://imagecdn.99acres.com/media1/27013/0/540260625M-1755111844086.jpg',
-    'https://imagecdn.99acres.com/media1/27013/0/540260627M-1755111888041.jpg'
+  images: [{ url: 'https://imagecdn.99acres.com/media1/27013/0/540260619M-1755111487117.jpg', label: "Property Image" },
+  { url: 'https://imagecdn.99acres.com/media1/27013/0/540260625M-1755111844086.jpg', label: "Hall" },
+  { url: 'https://imagecdn.99acres.com/media1/27013/0/540260627M-1755111888041.jpg', label: "Dining Table" }
   ],
   agent: {
     name: 'Amit Singh',
@@ -2023,12 +1989,11 @@ const mockProperty = [{
     { name: 'TV', icon: <FaTv className="text-gray-600" /> },
     { name: 'AC', icon: <FaSnowflake className="text-gray-600" /> },
   ],
-  images: [
-    'https://dynamic.realestateindia.com/prop_images/1716752/880923_1.jpg',
-    'https://dynamic.realestateindia.com/prop_images/1716752/880923_2.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/1716752/880923_5.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/1716752/880923_4.jpeg',
-    'https://dynamic.realestateindia.com/prop_images/1716752/880923_3.jpeg'
+  images: [{ url: 'https://dynamic.realestateindia.com/prop_images/1716752/880923_1.jpg', label: "Property Image" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/1716752/880923_2.jpeg', label: "Hall" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/1716752/880923_5.jpeg', label: "Bedroom" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/1716752/880923_4.jpeg', label: "Parking" },
+  { url: 'https://dynamic.realestateindia.com/prop_images/1716752/880923_3.jpeg', label: "Kitchen" }
   ],
   agent: {
     name: 'Karan Desai',
@@ -2079,9 +2044,9 @@ const mockProperty = [{
     { name: 'Bar', icon: <FaWineGlassAlt className="text-gray-600" /> },
   ],
   images: [
-    'https://newprojects.99acres.com/projects/urban_housing/urban_the_empress/images/empress.jpg',
-    'https://imagecdn.99acres.com/media1/25650/0/513000925O-1755112546448.jpg',
-    'https://imagecdn.99acres.com/media1/25650/0/513000923O-1755112549513.jpg'
+    { url: 'https://newprojects.99acres.com/projects/urban_housing/urban_the_empress/images/empress.jpg', label: 'Property Image' },
+    { url: 'https://imagecdn.99acres.com/media1/25650/0/513000925O-1755112546448.jpg', label: 'Bedroom' },
+    { url: 'https://imagecdn.99acres.com/media1/25650/0/513000923O-1755112549513.jpg', label: 'Bedroom' },
   ],
   agent: {
     name: 'Aishwarya Menon',
@@ -2106,73 +2071,53 @@ export default function PropertyDetails() {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [similarList, setSimilarList] = useState([]);
+  const [showShare, setShowShare] = useState(false);
+  const shareScrollRef = useRef(null);
+  const [copied, setCopied] = useState(false);
 
 
-  // In a real app, fetch property data based on ID
-  // useEffect(() => {
-  //   // Simulate API call
-  //   const fetchProperty = () => {
-  //     setTimeout(() => {
-  //       setProperty(mockProperty);
-  //       setLoading(false);
-  //     }, 500);
-  //   };
 
-  //   fetchProperty();
-  // }, [id]);
-
+  //Property Fetch Logic (ID Based)
   useEffect(() => {
-  setLoading(true);
+    setLoading(true);
 
-  const foundProperty = mockProperty.find(
-    (p) => String(p.id) === String(id)
-  );
+    const foundProperty = mockProperty.find(
+      (p) => String(p.id) === String(id)
+    );
 
-  setProperty(foundProperty || null);
-  setLoading(false);
-}, [id]);
-
-
-
-useEffect(() => {
-  if (!property) return;
-
-  const filtered = mockProperty.filter(
-    (p) =>
-      p.id !== property.id &&
-      p.type === property.type &&
-      p.location.split(',')[1]?.trim() === property.location.split(',')[1]?.trim()
-  );
-
-  setSimilarList(filtered.slice(0, 3)); // max 3 cards
-}, [property]);
+    setProperty(foundProperty || null);
+    setLoading(false);
+  }, [id]);
 
 
-  // const nextImage = () => {
-  //   setCurrentImageIndex((prevIndex) => 
-  //     prevIndex === property.images.length - 1 ? 0 : prevIndex + 1
-  //   );
-  // };
+  //Similar Properties
+  useEffect(() => {
+    if (!property) return;
 
-  // const prevImage = () => {
-  //   setCurrentImageIndex((prevIndex) =>
-  //     prevIndex === 0 ? property.images.length - 1 : prevIndex - 1
-  //   );
-  // };
+    const filtered = mockProperty.filter(
+      (p) =>
+        p.id !== property.id &&
+        p.type === property.type &&
+        p.location.split(',')[1]?.trim() === property.location.split(',')[1]?.trim()
+    );
+
+    setSimilarList(filtered.slice(0, 6)); // max 6 cards
+  }, [property]);
+
 
   const nextImage = () => {
-  if (!property) return;
-  setCurrentImageIndex((prev) =>
-    prev === property.images.length - 1 ? 0 : prev + 1
-  );
-};
+    if (!property) return;
+    setCurrentImageIndex((prev) =>
+      prev === property.images.length - 1 ? 0 : prev + 1
+    );
+  };
 
-const prevImage = () => {
-  if (!property) return;
-  setCurrentImageIndex((prev) =>
-    prev === 0 ? property.images.length - 1 : prev - 1
-  );
-};
+  const prevImage = () => {
+    if (!property) return;
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? property.images.length - 1 : prev - 1
+    );
+  };
 
 
   const toggleFavorite = () => {
@@ -2180,6 +2125,68 @@ const prevImage = () => {
     // In a real app, update favorite status in the backend
   };
 
+
+  const scrollLeft = () => {
+    shareScrollRef.current.scrollBy({
+      left: -120,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollRight = () => {
+    shareScrollRef.current.scrollBy({
+      left: 120,
+      behavior: "smooth",
+    });
+  };
+
+
+  const shareUrl = window.location.href;
+
+  // 🔗 COPY LINK FUNCTION
+  const copyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
+  const shareWhatsapp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  const shareTelegram = () => {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  const shareFacebook = () => {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      "_blank"
+    );
+  };
+
+  const shareX = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
+      "_blank"
+    );
+  };
+
+  const shareEmail = () => {
+    window.open(
+      `mailto:?body=${encodeURIComponent(shareUrl)}`,
+      "_blank"
+    );
+  };
+
+  const shareLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  //Contact Agent
   const handleContactAgent = (method) => {
     // In a real app, this would trigger a call/email/chat
     switch (method) {
@@ -2220,8 +2227,8 @@ const prevImage = () => {
     );
   }
 
-  const displayedAmenities = showAllAmenities 
-    ? property.amenities 
+  const displayedAmenities = showAllAmenities
+    ? property.amenities
     : property.amenities.slice(0, 6);
 
   return (
@@ -2259,15 +2266,22 @@ const prevImage = () => {
               >
                 <FiHeart className={`h-6 w-6 ${isFavorite ? 'fill-current' : ''}`} />
               </button>
-              <button className="p-2 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <FiShare2 className="h-6 w-6" />
+
+              {/* Share Button */}
+              <button
+                onClick={() => setShowShare(true)}
+                className="p-2 rounded-full text-gray-400 hover:bg-gray-100"
+              >
+                <FiShare2 size={22} />
               </button>
+
+
               <div className="hidden md:block bg-primary text-white px-6 py-2 rounded-lg font-medium">
                 {property.price}
               </div>
             </div>
           </div>
-          
+
           <div className="md:hidden mt-4 bg-primary text-white px-4 py-2 rounded-lg font-medium inline-block">
             {property.price}
           </div>
@@ -2279,29 +2293,39 @@ const prevImage = () => {
           {/* Main Content */}
           <div className="lg:w-2/3">
             {/* Image Gallery */}
-            <div className="relative bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden mb-6" style={{ paddingBottom: '60%' }}>
+            <div
+              className="relative rounded-xl overflow-hidden bg-gray-200 mb-6"
+              style={{ paddingBottom: '60%' }}
+            >
+              {/* IMAGE LABEL */}
+              <div className="absolute bottom-0 left-0 w-full bg-black/80 text-white text-sm py-2 text-center z-20">
+                <span className=" text-white text-lg px-3 py-1 rounded-full">
+                  {property.images[currentImageIndex].label}
+                </span>
+              </div>
+
+              {/* IMAGE */}
               <img
-                src={property.images[currentImageIndex]}
-                alt={`Property ${currentImageIndex + 1}`}
+                src={property.images[currentImageIndex].url}
+                alt={property.images[currentImageIndex].label}
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              
-              {/* Navigation Arrows */}
+
+              {/* ARROWS */}
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md focus:outline-none"
-                aria-label="Previous image"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
               >
-                <FiChevronLeft className="h-6 w-6" />
+                <FiChevronLeft size={22} />
               </button>
+
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md focus:outline-none"
-                aria-label="Next image"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
               >
-                <FiChevronRight className="h-6 w-6" />
+                <FiChevronRight size={22} />
               </button>
-              
+
               {/* Image Thumbnails */}
               <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
                 {property.images.map((_, index) => (
@@ -2313,35 +2337,39 @@ const prevImage = () => {
                   />
                 ))}
               </div>
-              
+
               {/* Image Counter */}
               <div className="absolute top-4 right-4 bg-black/60 text-white text-sm px-2 py-1 rounded">
                 {currentImageIndex + 1} / {property.images.length}
               </div>
             </div>
-            
+
             {/* Image Thumbnails Grid (for larger screens) */}
-            <div className="hidden md:grid grid-cols-4 gap-2 mb-8">
-              {property.images.map((image, index) => (
+            <div className="grid grid-cols-5 gap-2 mb-8">
+              {property.images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`relative overflow-hidden rounded-lg ${currentImageIndex === index ? 'ring-2 ring-primary' : ''}`}
-                  style={{ paddingBottom: '75%' }}
+                  className={`relative rounded-lg overflow-hidden ${currentImageIndex === index ? 'ring-2 ring-blue-600' : ''
+                    }`}
+                  style={{ paddingBottom: '70%' }}
                 >
+                  <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 rounded">
+                    {img.label}
+                  </span>
                   <img
-                    src={image}
-                    alt={`Thumbnail ${index + 1}`}
+                    src={img.url}
+                    alt={img.label}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                 </button>
               ))}
             </div>
-            
+
             {/* Property Details */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Property Details</h2>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Property Type</p>
@@ -2368,7 +2396,7 @@ const prevImage = () => {
                   <p className="font-medium text-gray-900 dark:text-white">{property.facing}</p>
                 </div>
               </div>
-              
+
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Description</h3>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -2376,11 +2404,11 @@ const prevImage = () => {
                 </p>
               </div>
             </div>
-            
+
             {/* Amenities */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Amenities</h2>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {displayedAmenities.map((amenity, index) => (
                   <div key={index} className="flex items-center">
@@ -2391,7 +2419,7 @@ const prevImage = () => {
                   </div>
                 ))}
               </div>
-              
+
               {property.amenities.length > 6 && (
                 <button
                   onClick={() => setShowAllAmenities(!showAllAmenities)}
@@ -2401,162 +2429,104 @@ const prevImage = () => {
                 </button>
               )}
             </div>
-            
+
             {/* Location */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Location</h2>
               <p className="text-gray-600 dark:text-gray-300 mb-4">{property.address}</p>
-              
+
               {/* Map Placeholder */}
-              <div className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden" style={{ height: '300px' }}>
-                <div className="w-full h-full flex items-center justify-center text-gray-500">
-                  <div className="text-center">
-                    <FiMapPin className="mx-auto h-12 w-12 mb-2" />
-                    <p>Map of {property.location}</p>
-                  </div>
-                </div>
-                {/* In a real app, you would use Google Maps or similar */}
-              </div>
-              
-              {/* <div className="mt-4 text-sm text-gray-500">
+              <iframe title="map" width="100%" height="300" style={{ border: 0 }} loading="lazy" allowFullScreen src={`https://www.google.com/maps?q=${property.location}&output=embed`}></iframe>
+
+              <div className="mt-4 text-sm text-gray-500">
                 <p>Landmarks:</p>
                 <ul className="list-disc list-inside mt-2">
-                  <li>Andheri Railway Station - 1.2 km</li>
-                  <li>Infinity Mall - 2.5 km</li>
-                  <li>Juhu Beach - 3.8 km</li>
-                  <li>Mumbai Airport - 6.2 km</li>
-                </ul>
-              </div> */}
-
-            <div className="mt-4 text-sm text-gray-500">
-              <p>Landmarks:</p>
-              <ul className="list-disc list-inside mt-2">
                   {property.landmarks?.map((landmark, index) => (
-                  <li key={index}>
-                  {landmark.name} - {landmark.distance}
-                  </li>
+                    <li key={index}>
+                      {landmark.name} - {landmark.distance}
+                    </li>
                   ))}
-              </ul>
+                </ul>
+              </div>
+
+              {!property.landmarks?.length && (
+                <p className="text-gray-400">Nearby landmarks not available</p>
+              )}
             </div>
 
-            {!property.landmarks?.length && (
-            <p className="text-gray-400">Nearby landmarks not available</p>
-           )}
-            </div>
-            
-            {/* Similar Properties */}
-            {/* <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Similar Properties</h2>
-              
+
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                Similar Properties
+              </h2>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {similarProperties.map((similar) => (
-                  <div key={similar.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                    <Link to={`/property/${similar.id}`}>
-                      <div className="relative">
-                        <img 
-                          src={similar.image} 
-                          alt={similar.title} 
-                          className="w-full h-48 object-cover"
-                        />
-                        <div className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow-md">
-                          <FiHeart className="h-5 w-5 text-gray-600" />
+                {similarList.length > 0 ? (
+                  similarList.map((similar) => (
+                    <div
+                      key={similar.id}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      <Link to={`/property/${similar.id}`}>
+                        {/* IMAGE */}
+                        <div className="relative">
+                          <img
+                            src={similar.images?.[0]?.url}
+                            alt={similar.images?.[0]?.label || similar.title}
+                            className="w-full h-48 object-cover"
+                          />
                         </div>
-                      </div>
-                      
-                      <div className="p-4">
-                        <h3 className="font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">{similar.title}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mb-2">
-                          <FiMapPin className="mr-1" size={12} />
-                          <span className="line-clamp-1">{similar.location}</span>
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-primary">{similar.price}</span>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <FaBed className="mr-1" />
-                            <span className="mr-3">{similar.beds}</span>
-                            <FaBath className="mr-1" />
-                            <span>{similar.baths}</span>
+
+                        {/* CONTENT */}
+                        <div className="p-4">
+                          {/* TITLE */}
+                          <h3 className="text-base font-semibold text-blue-600 mb-1">
+                            {similar.title}
+                          </h3>
+
+                          {/* LOCATION */}
+                          <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mb-2">
+                            <FiMapPin className="mr-1" size={12} />
+                            <span>{similar.location}</span>
+                          </p>
+
+                          {/* PRICE + BEDS/BATHS */}
+                          <div className="flex justify-between items-center">
+                            {/* PRICE – SAME SIZE AS TITLE */}
+                            <span className="text-base font-semibold text-primary">
+                              {similar.price}
+                            </span>
+
+                            <div className="flex items-center text-sm text-gray-500">
+                              <FaBed className="mr-1" />
+                              <span className="mr-3">{similar.beds ?? 2}</span>
+                              <FaBath className="mr-1" />
+                              <span>{similar.baths ?? 2}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div> */}
-
-           <div className="mb-8">
-  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-    Similar Properties
-  </h2>
-
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {similarList.length > 0 ? (
-      similarList.map((similar) => (
-        <div
-          key={similar.id}
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-        >
-          <Link to={`/property/${similar.id}`}>
-            {/* IMAGE */}
-            <div className="relative">
-              <img
-                src={similar.images?.[0]}
-                alt={similar.title}
-                className="w-full h-48 object-cover"
-              />
-            </div>
-
-            {/* CONTENT */}
-            <div className="p-4">
-              {/* TITLE */}
-              <h3 className="text-base font-semibold text-blue-600 mb-1">
-                {similar.title}
-              </h3>
-
-              {/* LOCATION */}
-              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mb-2">
-                <FiMapPin className="mr-1" size={12} />
-                <span>{similar.location}</span>
-              </p>
-
-              {/* PRICE + BEDS/BATHS */}
-              <div className="flex justify-between items-center">
-                {/* PRICE – SAME SIZE AS TITLE */}
-                <span className="text-base font-semibold text-primary">
-                  {similar.price}
-                </span>
-
-                <div className="flex items-center text-sm text-gray-500">
-                  <FaBed className="mr-1" />
-                  <span className="mr-3">{similar.beds ?? 2}</span>
-                  <FaBath className="mr-1" />
-                  <span>{similar.baths ?? 2}</span>
-                </div>
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No similar properties found</p>
+                )}
               </div>
             </div>
-          </Link>
-        </div>
-      ))
-    ) : (
-      <p className="text-gray-500">No similar properties found</p>
-    )}
-  </div>
-</div>
 
 
           </div>
-          
+
           {/* Sidebar */}
           <div className="lg:w-1/3">
             {/* Contact Agent */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 sticky top-24 mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Contact Agent</h2>
-              
+
               <div className="flex items-center mb-6">
-                <img 
-                  src={property.agent.image} 
-                  alt={property.agent.name} 
+                <img
+                  src={property.agent.image}
+                  alt={property.agent.name}
                   className="w-16 h-16 rounded-full object-cover mr-4"
                 />
                 <div>
@@ -2577,7 +2547,7 @@ const prevImage = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <button
                   onClick={() => handleContactAgent('call')}
@@ -2586,7 +2556,7 @@ const prevImage = () => {
                   <FaPhoneAlt className="mr-2" />
                   Call Now
                 </button>
-                
+
                 <button
                   onClick={() => handleContactAgent('whatsapp')}
                   className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white py-3 px-4 rounded-lg font-medium transition-colors"
@@ -2594,7 +2564,7 @@ const prevImage = () => {
                   <FaWhatsapp className="mr-2 text-xl" />
                   WhatsApp
                 </button>
-                
+
                 <button
                   onClick={() => handleContactAgent('email')}
                   className="w-full flex items-center justify-center border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
@@ -2603,7 +2573,7 @@ const prevImage = () => {
                   Email Agent
                 </button>
               </div>
-              
+
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="font-medium text-gray-900 dark:text-white mb-3">Schedule a Visit</h3>
                 <div className="space-y-3">
@@ -2628,23 +2598,23 @@ const prevImage = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Price Trends */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Price Trends</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Average Price in {property.location.split(',')[0]}</p>
                   <p className="text-lg font-bold text-gray-900 dark:text-white">₹12,500/sq.ft</p>
                   <p className="text-sm text-green-600">+5.2% from last year</p>
                 </div>
-                
+
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Price per sq.ft (This Project)</p>
                   <p className="text-lg font-bold text-gray-900 dark:text-white">{property.pricePerSqft}</p>
                 </div>
-                
+
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-sm text-gray-500 dark:text-gray-400">EMI Calculator</p>
                   <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -2656,7 +2626,7 @@ const prevImage = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Safety Tips */}
             <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
               <h3 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">Safety Tips for Buyers</h3>
@@ -2675,6 +2645,111 @@ const prevImage = () => {
                 </li>
               </ul>
             </div>
+
+            {/* Share  */}
+
+            {showShare && (
+              <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+                <div className="bg-white rounded-xl px-5 py-4 w-[360px] relative">
+
+                  <h3 className="text-sm font-semibold mb-4 text-center">Share</h3>
+
+                  {/* LEFT ARROW */}
+                  <button
+                    onClick={scrollLeft}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-100 p-1 rounded-full shadow"
+                  >
+                    <FiChevronLeft size={18} />
+                  </button>
+
+                  {/* SHARE ICONS */}
+                  <div
+                    ref={shareScrollRef}
+                    className="flex gap-5 overflow-hidden scroll-smooth px-6"
+                  >
+                    {/* WhatsApp */}
+                    <div onClick={shareWhatsapp} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl">
+                        <FaWhatsapp />
+                      </div>
+                      <p className="text-xs mt-1">WhatsApp</p>
+                    </div>
+
+                    {/* Telegram */}
+                    <div onClick={shareTelegram} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-sky-500 rounded-full flex items-center justify-center text-white text-2xl">
+                        <FaTelegram />
+                      </div>
+                      <p className="text-xs mt-1">Telegram</p>
+                    </div>
+
+                    {/* Facebook */}
+                    <div onClick={shareFacebook} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl">
+                        <FaFacebookF />
+                      </div>
+                      <p className="text-xs mt-1">Facebook</p>
+                    </div>
+
+                    {/* Twitter */}
+                    <div onClick={shareX} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center text-white text-2xl">
+                        <FaXTwitter />
+                      </div>
+                      <p className="text-xs mt-1">Twitter</p>
+                    </div>
+
+                    {/* Email */}
+                    <div onClick={shareEmail} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-gray-400 rounded-full flex items-center justify-center text-white text-2xl">
+                        <MdEmail />
+                      </div>
+                      <p className="text-xs mt-1">Email</p>
+                    </div>
+
+                    {/* LinkedIn */}
+                    <div onClick={shareLinkedIn} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-blue-700 rounded-full flex items-center justify-center text-white text-2xl">
+                        <FaLinkedinIn />
+                      </div>
+                      <p className="text-xs mt-1">LinkedIn</p>
+                    </div>
+
+                    {/* Copy */}
+                    <div onClick={copyLink} className="cursor-pointer text-center min-w-[70px]">
+                      <div className="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                        🔗
+                      </div>
+                      <p className="text-xs mt-1">Copy</p>
+                    </div>
+
+                  </div>
+
+                  {/* RIGHT ARROW */}
+                  <button
+                    onClick={scrollRight}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-100 p-1 rounded-full shadow"
+                  >
+                    <FiChevronRight size={18} />
+                  </button>
+
+                  <button
+                    onClick={() => setShowShare(false)}
+                    className="mt-4 text-xs text-gray-500 mx-auto block"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ✅ COPY ALERT */}
+            {copied && (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white px-4 py-2 rounded-lg text-sm z-50">
+                Link copied!
+              </div>
+            )}
+
           </div>
         </div>
       </div>

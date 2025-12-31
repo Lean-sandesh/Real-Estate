@@ -122,13 +122,6 @@ export default function PropertyCard({ property }) {
           </>
         )}
 
-
-        {/* Posted Time */}
-        {/* {property.postedOn && (
-          <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-            {property.postedOn}
-          </div>
-        )} */}
       </div>
 
 
@@ -161,9 +154,6 @@ export default function PropertyCard({ property }) {
 
         </div>
 
-
-
-
         {/* LOCATION */}
         <p className="text-gray-500 flex items-center gap-1 mt-1 text-sm">
           <FiMapPin className="text-gray-400" /> {property.location}
@@ -180,21 +170,11 @@ export default function PropertyCard({ property }) {
           {property.area} • {property.bhk}
         </p>
 
-        {/* RATING */}
-        {/* <div className="flex items-center gap-1 mt-2 text-yellow-500">
-          ⭐⭐⭐⭐☆ <span className="text-gray-600 ml-1">{property.rating}</span>
-        </div> */}
-
         {/* Property Features */}
         <div className="mt-auto">
 
 
           <div className="mt-3 flex items-center justify-between">
-            {/* <div className="flex items-center">
-    <span className="text-xs text-gray-500 ml-2">
-      ({property.reviews || 0} reviews)
-    </span>
-  </div> */}
 
             {/* Posted Time */}
             <span className="text-xs text-gray-500">

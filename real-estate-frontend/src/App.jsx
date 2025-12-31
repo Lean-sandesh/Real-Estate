@@ -30,7 +30,6 @@ import ClientsList from './pages/agent/ClientsList';
 import PendingApprovals from './pages/agent/PendingApprovals';
 import RevenuePage from './pages/agent/RevenuePage';
 import AdminAddProperty from './pages/admin/AdminAddProperty';
-import PropertyDetails from './components/PropertyDetails';
 import AdminLayout from './pages/admin/AdminLayout';
 import AgentLayout from './pages/agent/AgentLayout';
 import AgentReport from './pages/agent/AgentReport';
@@ -107,7 +106,6 @@ function App() {
             <Route path="revenue" element={<RevenuePage />} />
             <Route path="reports" element={<AgentReport />} />
           </Route>
-          <Route path="/Properties/:id" element={<PropertyDetails />} />
         </Routes>
         </FavoritesProvider>
       </AuthProvider>

@@ -1,14 +1,14 @@
-import { useParams, useNavigate  } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { mockProperties } from "./Listings";
 import PropertyCard from "../components/PropertyCard";
-import { FiArrowLeft  } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 
 
 const AgentListings = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const agentId = Number(id);
 
-    const navigate = useNavigate(); // navigation
+  const navigate = useNavigate(); // navigation
 
 
   // filter properties by agent ID
@@ -16,7 +16,7 @@ const AgentListings = () => {
     (property) => property.agentId === agentId
   );
 
-    const agentName = filteredProperties[0]?.agentName || "Unknown Agent";
+  const agentName = filteredProperties[0]?.agentName || "Unknown Agent";
 
 
   return (
@@ -24,11 +24,11 @@ const AgentListings = () => {
 
       {/* Go Back button */}
       <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-gray-700 mb-4 hover:text-black"
-            >
-              <FiArrowLeft size={20} /> Go Back
-            </button>
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-700 mb-4 hover:text-black"
+      >
+        <FiArrowLeft size={20} /> Go Back
+      </button>
 
       <h2 className="text-2xl font-bold mb-6">
         Properties by Agent {agentName}

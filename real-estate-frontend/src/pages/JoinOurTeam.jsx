@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPhone, FiMail, FiMapPin, FiClock, FiArrowLeft  } from "react-icons/fi";
+import { FiPhone, FiMail, FiMapPin, FiClock, FiArrowLeft } from "react-icons/fi";
 
 
 
@@ -50,12 +50,12 @@ Resume: (Attached Separately)
 
     const url = `https://wa.me/${hrNumber}?text=${encoded}`;
 
-    window.open(url, "_blank"); 
+    window.open(url, "_blank");
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-xl rounded-xl mt-10 mb-20">
-          {/* Go Back Button */}
+      {/* Go Back Button */}
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-700 mb-4 hover:text-black"

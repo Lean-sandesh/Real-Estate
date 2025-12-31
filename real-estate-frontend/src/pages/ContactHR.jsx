@@ -1,17 +1,17 @@
 import React from "react";
-import { FiPhone, FiMail, FiMapPin, FiClock, FiArrowLeft  } from "react-icons/fi";
+import { FiPhone, FiMail, FiMapPin, FiClock, FiArrowLeft } from "react-icons/fi";
 import { FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 
 export default function ContactHR() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-lg p-6 mt-10 rounded-xl mb-10">
 
 
-          {/* Go Back Button */}
+      {/* Go Back Button */}
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-700 mb-4 hover:text-black"

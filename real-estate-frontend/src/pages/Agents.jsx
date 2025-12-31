@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { FiPhone, FiMail, FiMapPin, FiStar } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { Link } from "react-router-dom";
@@ -23,10 +23,10 @@ const agents = [
       linkedin: '#',
       instagram: '#',
       specializations: [
-      "Luxury Villas",
-      "Commercial",
-      "Corporate Lease"
-    ]
+        "Luxury Villas",
+        "Commercial",
+        "Corporate Lease"
+      ]
     }
   },
   {
@@ -47,10 +47,10 @@ const agents = [
       linkedin: '#',
       instagram: '#',
       specializations: [
-      "Luxury Villas",
-      "Commercial",
-      "Corporate Lease"
-    ]
+        "Luxury Villas",
+        "Commercial",
+        "Corporate Lease"
+      ]
     }
   },
   {
@@ -71,10 +71,10 @@ const agents = [
       linkedin: '#',
       instagram: '#',
       specializations: [
-      "Luxury Villas",
-      "Commercial",
-      "Corporate Lease"
-    ]
+        "Luxury Villas",
+        "Commercial",
+        "Corporate Lease"
+      ]
     }
   },
   {
@@ -195,7 +195,7 @@ const agents = [
 
 const Agents = () => {
 
-   const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [reviews, setReviews] = useState({});
@@ -205,61 +205,61 @@ const Agents = () => {
   const normalize = (str) => str.toLowerCase();
 
   const [showForm, setShowForm] = useState(false);
-const [selectedAgent, setSelectedAgent] = useState(null);
-const [compareList, setCompareList] = useState([]);
-const [showCompare, setShowCompare] = useState(false); // popup state
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false); // popup state
 
 
 
   const [currentPage, setCurrentPage] = useState(1);
   const agentsPerPage = 4;
 
-const [formData, setFormData] = useState({
-  name: "",
-  phone: "",
-  message: ""
-});
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    message: ""
+  });
 
-const openForm = (agent) => {
-  setSelectedAgent(agent);
-  setShowForm(true);
-};
+  const openForm = (agent) => {
+    setSelectedAgent(agent);
+    setShowForm(true);
+  };
 
-const handleChange = (e) => {
-  setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-const sendInquiry = () => {
-  let whatsappMessage = `Hello, I am ${formData.name}.%0AContact: ${formData.phone}%0A${formData.message}`;
+  const sendInquiry = () => {
+    let whatsappMessage = `Hello, I am ${formData.name}.%0AContact: ${formData.phone}%0A${formData.message}`;
 
-  window.open(
-    `https://wa.me/${selectedAgent.phone.replace(/\s+/g, '')}?text=${whatsappMessage}`
-  );
+    window.open(
+      `https://wa.me/${selectedAgent.phone.replace(/\s+/g, '')}?text=${whatsappMessage}`
+    );
 
-  setShowForm(false);
-};
+    setShowForm(false);
+  };
 
 
-const toggleCompare = (agent) => {
-  const exists = compareList.find(a => a.id === agent.id);
+  const toggleCompare = (agent) => {
+    const exists = compareList.find(a => a.id === agent.id);
 
-  if (exists) {
-    setCompareList(compareList.filter(a => a.id !== agent.id));
-    return;
-  }
+    if (exists) {
+      setCompareList(compareList.filter(a => a.id !== agent.id));
+      return;
+    }
 
-  if (compareList.length === 2) {
-    alert("You can compare only 2 agents at a time!");
-    return;
-  }
+    if (compareList.length === 2) {
+      alert("You can compare only 2 agents at a time!");
+      return;
+    }
 
-  setCompareList([...compareList, agent]);
+    setCompareList([...compareList, agent]);
 
-  // After selecting 2 agents → open popup
-  if (compareList.length === 1) {
-    setShowCompare(true);
-  }
-};
+    // After selecting 2 agents → open popup
+    if (compareList.length === 1) {
+      setShowCompare(true);
+    }
+  };
 
 
   // ✅ filtering logic
@@ -272,15 +272,15 @@ const toggleCompare = (agent) => {
       filterLocation ? normalize(agent.location).includes(normalize(filterLocation)) : true
     )
     .sort((a, b) => {
-    if (sortValue === "experience") {
-      const expA = parseInt(a.experience); // ✅ "12+ years" → 12
-      const expB = parseInt(b.experience);
-      return expB - expA;
-    }
-    if (sortValue === "rating") return b.rating - a.rating;
-    if (sortValue === "properties") return b.properties - a.properties;
-    return 0;
-  });
+      if (sortValue === "experience") {
+        const expA = parseInt(a.experience); // ✅ "12+ years" → 12
+        const expB = parseInt(b.experience);
+        return expB - expA;
+      }
+      if (sortValue === "rating") return b.rating - a.rating;
+      if (sortValue === "properties") return b.properties - a.properties;
+      return 0;
+    });
 
   // ✅ Pagination Logic (Slice)
   const totalPages = Math.ceil(filteredAgents.length / agentsPerPage);
@@ -291,26 +291,26 @@ const toggleCompare = (agent) => {
 
 
 
-const submitReview = (agentId) => {
-  const agentReview = newReview[agentId];
-  if (!agentReview || agentReview.rating === 0 || agentReview.comment.trim() === "") return;
+  const submitReview = (agentId) => {
+    const agentReview = newReview[agentId];
+    if (!agentReview || agentReview.rating === 0 || agentReview.comment.trim() === "") return;
 
-  const updated = {
-    ...reviews,
-    [agentId]: [
-      ...(reviews[agentId] || []),
-      { rating: agentReview.rating, comment: agentReview.comment }
-    ]
+    const updated = {
+      ...reviews,
+      [agentId]: [
+        ...(reviews[agentId] || []),
+        { rating: agentReview.rating, comment: agentReview.comment }
+      ]
+    };
+
+    setReviews(updated);
+
+    // clear review for that agent
+    setNewReview({
+      ...newReview,
+      [agentId]: { rating: 0, comment: "" }
+    });
   };
-
-  setReviews(updated);
-
-  // clear review for that agent
-  setNewReview({ 
-    ...newReview, 
-    [agentId]: { rating: 0, comment: "" } 
-  });
-};
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -320,7 +320,7 @@ const submitReview = (agentId) => {
         <p className="text-xl text-gray-600 dark:text-gray-300">Meet our team of experienced real estate professionals</p>
       </div>
 
-      
+
 
       {/* Search and Filter */}
       <div className="mb-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -331,7 +331,7 @@ const submitReview = (agentId) => {
               placeholder="Search agents by name or location"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}            
+              onChange={(e) => setSearchText(e.target.value)}
             />
           </div>
           <select
@@ -396,10 +396,10 @@ const submitReview = (agentId) => {
                     <FaLinkedin className="h-5 w-5" />
                   </a>
                 </div>
-              </div>              
-              
+              </div>
+
               <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{agent.description}</p>
-              
+
               <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                 <div className="flex items-center">
                   <FiMapPin className="mr-2 text-blue-600 dark:text-blue-400" />
@@ -418,7 +418,7 @@ const submitReview = (agentId) => {
                   </a>
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-4 mt-4 mb-3">
                 <div>
                   <span className="font-medium text-gray-900 dark:text-white">{agent.experience}</span> Experience
@@ -427,155 +427,151 @@ const submitReview = (agentId) => {
                   <span className="font-medium text-gray-900 dark:text-white">{agent.properties}</span> Properties
                 </div>
               </div>
-              
-            <Link
-             to={`/agent/${agent.id}`}
-             className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
+
+              <Link
+                to={`/agent/${agent.id}`}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
               >View Listings
-            </Link>  
+              </Link>
 
 
-<button
-  onClick={() => toggleCompare(agent)}
-  className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
->
-  {compareList.find(a => a.id === agent.id) ? "Selected" : "Compare"}
-</button>
+              <button
+                onClick={() => toggleCompare(agent)}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-700 duration-200 mb-3 shadow-md block"
+              >
+                {compareList.find(a => a.id === agent.id) ? "Selected" : "Compare"}
+              </button>
 
-           
+
 
 
               {/* WhatsApp Button */}
               <div className="flex items-center justify-between gap-3">
-            <a
-            href={`https://wa.me/${agent.phone.replace(/\s+/g, '')}`}
-            target="_blank"
-            className="flex-1 bg-green-600 text-white py-2 rounded-md text-center hover:bg-green-700 duration-200"
-            >
-            WhatsApp
-            </a>
+                <a
+                  href={`https://wa.me/${agent.phone.replace(/\s+/g, '')}`}
+                  target="_blank"
+                  className="flex-1 bg-green-600 text-white py-2 rounded-md text-center hover:bg-green-700 duration-200"
+                >
+                  WhatsApp
+                </a>
 
                 {/* Inquiry Modal Open Button */}
-          <button
-            onClick={() => openForm(agent)}
-            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:text-black py-2 rounded-lg text-sm">
-            Inquiry
-          </button>
-</div>
+                <button
+                  onClick={() => openForm(agent)}
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:text-black py-2 rounded-lg text-sm">
+                  Inquiry
+                </button>
+              </div>
 
 
 
-{/* Add Review Section */}
-<div className="mt-4 border-t pt-4">
+              {/* Add Review Section */}
+              <div className="mt-4 border-t pt-4">
 
-  <h3 className="font-semibold mb-2">Add Review</h3>
+                <h3 className="font-semibold mb-2">Add Review</h3>
 
-  {/* Star rating */}
- <div className="flex gap-1 mb-2">
-  {[1, 2, 3, 4, 5].map((num) => (
-    <span
-      key={num}
-      onClick={() =>
-        setNewReview({
-          ...newReview,
-          [agent.id]: {
-            rating: num,
-            comment: newReview[agent.id]?.comment || "",
-          },
-        })
-      }
-      className={`cursor-pointer text-xl ${
-        newReview[agent.id]?.rating >= num
-          ? "text-yellow-400"
-          : "text-gray-400"
-      }`}
-    >
-      ★
-    </span>
-  ))}
-</div>
+                {/* Star rating */}
+                <div className="flex gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <span
+                      key={num}
+                      onClick={() =>
+                        setNewReview({
+                          ...newReview,
+                          [agent.id]: {
+                            rating: num,
+                            comment: newReview[agent.id]?.comment || "",
+                          },
+                        })
+                      }
+                      className={`cursor-pointer text-xl ${newReview[agent.id]?.rating >= num
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                        }`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
 
-  <textarea
-  className="w-full border rounded-md p-2 text-sm"
-  placeholder="Write your review..."
-  value={newReview[agent.id]?.comment || ""}
-  onChange={(e) =>
-    setNewReview({
-      ...newReview,
-      [agent.id]: {
-        rating: newReview[agent.id]?.rating || 0,
-        comment: e.target.value,
-      },
-    })
-  }
-/>
+                <textarea
+                  className="w-full border rounded-md p-2 text-sm"
+                  placeholder="Write your review..."
+                  value={newReview[agent.id]?.comment || ""}
+                  onChange={(e) =>
+                    setNewReview({
+                      ...newReview,
+                      [agent.id]: {
+                        rating: newReview[agent.id]?.rating || 0,
+                        comment: e.target.value,
+                      },
+                    })
+                  }
+                />
 
 
-  <button
-    onClick={() => submitReview(agent.id)}
-    className="bg-blue-600 text-white px-4 py-2 rounded-md mt-2 w-full"
-  >
-    Submit Review
-  </button>
+                <button
+                  onClick={() => submitReview(agent.id)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md mt-2 w-full"
+                >
+                  Submit Review
+                </button>
 
-  {/* Show Reviews */}
-  <div className="mt-4">
-    {(reviews[agent.id] || []).map((r, index) => (
-      <div key={index} className="border p-2 rounded-md mb-2 bg-gray-50">
-        <div className="flex text-yellow-400 text-sm">
-          {"★".repeat(r.rating)}
-        </div>
-        <p className="text-sm">{r.comment}</p>
-      </div>
-    ))}
-  </div>
-</div>
+                {/* Show Reviews */}
+                <div className="mt-4">
+                  {(reviews[agent.id] || []).map((r, index) => (
+                    <div key={index} className="border p-2 rounded-md mb-2 bg-gray-50">
+                      <div className="flex text-yellow-400 text-sm">
+                        {"★".repeat(r.rating)}
+                      </div>
+                      <p className="text-sm">{r.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
 
             </div>
           </div>
         ))}
       </div>
-      
+
 
       {/* ✅ Pagination Buttons */}
       <div className="flex justify-center gap-4 mt-10">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
-          className={`px-5 py-2 rounded-lg text-white ${
-            currentPage === 1 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className={`px-5 py-2 rounded-lg text-white ${currentPage === 1 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+            }`}
         >
           Previous
         </button>
 
         {/* Page numbers */}
-      {[...Array(totalPages)].map((_, index) => (
-        <button
-          key={index}
-          onClick={() => setCurrentPage(index + 1)}
-          className={`px-3 py-1 rounded-md ${
-            currentPage === index + 1
-              ? "bg-primary text-white"
-              : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`px-3 py-1 rounded-md ${currentPage === index + 1
+                ? "bg-primary text-white"
+                : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              }`}
+          >
+            {index + 1}
+          </button>
+        ))}
 
         <button
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage(currentPage + 1)}
-          className={`px-5 py-2 rounded-lg text-white ${
-            currentPage === totalPages ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className={`px-5 py-2 rounded-lg text-white ${currentPage === totalPages ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+            }`}
         >
           Next
         </button>
       </div>
-      
+
       {/* CTA Section */}
       <div className="mt-16 bg-blue-600 rounded-xl p-8 md:p-12 text-center text-white">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">Join Our Team of Professional Agents</h2>
@@ -583,119 +579,119 @@ const submitReview = (agentId) => {
           Are you passionate about real estate? Join our team of professional agents and start your successful career today.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-      <Link
-         to="/join-our-team"
-         className="bg-transparent border-2 text-white border-white hover:bg-blue-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-      >
-         Join Our Team
-      </Link>
+          <Link
+            to="/join-our-team"
+            className="bg-transparent border-2 text-white border-white hover:bg-blue-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+          >
+            Join Our Team
+          </Link>
 
-          
-      <Link
-        to="/contact-hr"
-        className="bg-transparent border-2 text-white border-white hover:bg-blue-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-      >
-        Contact HR
-      </Link>
+
+          <Link
+            to="/contact-hr"
+            className="bg-transparent border-2 text-white border-white hover:bg-blue-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+          >
+            Contact HR
+          </Link>
         </div>
       </div>
 
-{/* Agent Compare */}
-{showCompare && compareList.length > 0 && (
-  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-    <div className="bg-white w-[90%] max-w-3xl rounded-lg p-6 shadow-xl relative">
+      {/* Agent Compare */}
+      {showCompare && compareList.length > 0 && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white w-[90%] max-w-3xl rounded-lg p-6 shadow-xl relative">
 
-      {/* Close Button */}
-<button
-  onClick={() => {
-    setShowCompare(false);
-    setCompareList([]);  // auto unselect 2 agents
-  }}
-  className="absolute top-3 right-3 text-xl font-bold"
->
-  ✖
-</button>
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                setShowCompare(false);
+                setCompareList([]);  // auto unselect 2 agents
+              }}
+              className="absolute top-3 right-3 text-xl font-bold"
+            >
+              ✖
+            </button>
 
 
-      <h2 className="text-xl font-bold mb-4 text-center">Compare Agents</h2>
+            <h2 className="text-xl font-bold mb-4 text-center">Compare Agents</h2>
 
-      <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6">
 
-        {compareList.map(agent => (
-          <div key={agent.id} className="border p-4 rounded-lg shadow-sm">
-            
-            {/* Agent Image */}
-            <img
-              src={agent.image}
-              alt={agent.name}
-              className="w-full h-60 object-cover rounded-md mb-3"
-            />
+              {compareList.map(agent => (
+                <div key={agent.id} className="border p-4 rounded-lg shadow-sm">
 
-            <h3 className="text-lg font-bold">{agent.name}</h3>
+                  {/* Agent Image */}
+                  <img
+                    src={agent.image}
+                    alt={agent.name}
+                    className="w-full h-60 object-cover rounded-md mb-3"
+                  />
 
-            <p><b>Experience:</b> {agent.experience} years</p>
-            <p><b>Rating:</b> ⭐ {agent.rating}</p>
-            <p><b>Total Properties:</b> {agent.properties}</p>
-            <p><b>Location:</b> {agent.location}</p>
+                  <h3 className="text-lg font-bold">{agent.name}</h3>
+
+                  <p><b>Experience:</b> {agent.experience} years</p>
+                  <p><b>Rating:</b> ⭐ {agent.rating}</p>
+                  <p><b>Total Properties:</b> {agent.properties}</p>
+                  <p><b>Location:</b> {agent.location}</p>
+                </div>
+              ))}
+
+            </div>
           </div>
-        ))}
-
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
 
 
       {/* Inquiry Modal */}
-    {showForm && (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-    <div className="bg-white dark:bg-gray-900 w-[90%] max-w-md p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4 text-center text-gray-900 dark:text-white">
-        Inquiry to {selectedAgent?.name}
-      </h2>
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-900 w-[90%] max-w-md p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-900 dark:text-white">
+              Inquiry to {selectedAgent?.name}
+            </h2>
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Your Name"
-        onChange={handleChange}
-        className="w-full mb-3 px-3 py-2 border rounded-md"
-      />
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              onChange={handleChange}
+              className="w-full mb-3 px-3 py-2 border rounded-md"
+            />
 
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone Number"
-        onChange={handleChange}
-        className="w-full mb-3 px-3 py-2 border rounded-md"
-      />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone Number"
+              onChange={handleChange}
+              className="w-full mb-3 px-3 py-2 border rounded-md"
+            />
 
-      <textarea
-        name="message"
-        placeholder="Your Message"
-        onChange={handleChange}
-        className="w-full mb-3 px-3 py-2 border rounded-md"
-      ></textarea>
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              onChange={handleChange}
+              className="w-full mb-3 px-3 py-2 border rounded-md"
+            ></textarea>
 
-      <div className="flex gap-3">
-        <button
-          onClick={sendInquiry}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md"
-        >
-          Send on WhatsApp
-        </button>
+            <div className="flex gap-3">
+              <button
+                onClick={sendInquiry}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md"
+              >
+                Send on WhatsApp
+              </button>
 
-        <button
-          onClick={() => setShowForm(false)}
-          className="w-full bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-md"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                onClick={() => setShowForm(false)}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-md"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
 
